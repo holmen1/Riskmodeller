@@ -1,0 +1,7 @@
+"minCost1";73
+"maxCost1";329604
+"minCost2";9423
+"maxCost2";6059663
+"corr(N1yr,N2yr)";0.56050636584583
+"corr(totCost1yr,totCost2yr)";0.503325249038742
+"seed";103
