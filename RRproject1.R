@@ -3,6 +3,20 @@
 claims <- read.table("Projekt1_Grupp8.txt", header = TRUE, sep = ";")
 claims$ClaimDay365 <- claims$ClaimDay %% 366
 
+maxClaim1 <- max(claims$ClaimCost[claims$ClaimType==1])
+minClaim1 <- min(claims$ClaimCost[claims$ClaimType==1])
+maxClaim2 <- max(claims$ClaimCost[claims$ClaimType==2])
+minClaim2 <- min(claims$ClaimCost[claims$ClaimType==2])
+
+obs1 <- length(claims$ClaimCost[claims$ClaimType==1])
+obs2 <- length(claims$ClaimCost[claims$ClaimType==2])
+
+lambda1 <- obs1 / max(claims$ClaimDay[claims$ClaimType==1])
+lambda2 <- obs2 / max(claims$ClaimDay[claims$ClaimType==1])
+
+
+
+
 ## ARRIVALS
 claims1 <- subset(claims, ClaimType == 1, select=c(ClaimDay, ClaimDay365, ClaimCost))
 claims2 <- subset(claims, ClaimType == 2, select=c(ClaimDay, ClaimDay365, ClaimCost))
@@ -11,26 +25,40 @@ claims2 <- subset(claims, ClaimType == 2, select=c(ClaimDay, ClaimDay365, ClaimC
 C1 <- data.matrix(claims1)
 C2 <- data.matrix(claims2)
 
-# Histogram 10Y
-par(mfrow=c(2,1))
-hist(C1[,1])
-hist(C2[,1])
+# # Histogram 10Y
+# par(mfrow=c(2,1))
+# hist(C1[,1])
+# hist(C2[,1])
 
 # Histogram 1Y
 par(mfrow=c(2,1))
-hist(C1[,2])
-hist(C2[,2])
+hist(C1[,2],365)
+hist(C2[,2],365)
+
+claimsCount1Y <- aggregate(list(n=claims$ClaimDay365),list(ClaimType=claims$ClaimType,ClaimDay365=claims$ClaimDay365), length)
+check1 <- sum(claimsCount1Y$n[claimsCount1Y$ClaimType==1])
+
+claimsCountY1 <- subset(claimsCount1Y, ClaimType == 1, select=c(ClaimDay365, n))
+claimsCountY2 <- subset(claimsCount1Y, ClaimType == 2, select=c(ClaimDay365, n))
+
+par(mfrow=c(2,2))
+plot(claimsCountY1)
+plot(claimsCountY2)
+plot(rpois(365,lambda1))
+plot(rpois(365,lambda2))
+
 
 ## COST
 claimsMeanCost10Y <- aggregate(list(MeanCost=claims$ClaimCost),list(ClaimType=claims$ClaimType,ClaimDay=claims$ClaimDay), mean)
 claimsMeanCost1Y <- aggregate(list(MeanCost=claims$ClaimCost),list(ClaimType=claims$ClaimType,ClaimDay365=claims$ClaimDay365), mean)
 
-claimsCost1 <- subset(claimsMeanCost10Y, ClaimType == 1, select=c(ClaimDay, MeanCost))
-claimsCost2 <- subset(claimsMeanCost10Y, ClaimType == 2, select=c(ClaimDay, MeanCost))
 
-par(mfrow=c(2,1))
-plot(claimsCost1)
-plot(claimsCost2)
+# claimsCost1 <- subset(claimsMeanCost10Y, ClaimType == 1, select=c(ClaimDay, MeanCost))
+# claimsCost2 <- subset(claimsMeanCost10Y, ClaimType == 2, select=c(ClaimDay, MeanCost))
+# 
+# par(mfrow=c(2,1))
+# plot(claimsCost1)
+# plot(claimsCost2)
 
 claimsCostY1 <- subset(claimsMeanCost1Y, ClaimType == 1, select=c(ClaimDay365, MeanCost))
 claimsCostY2 <- subset(claimsMeanCost1Y, ClaimType == 2, select=c(ClaimDay365, MeanCost))
