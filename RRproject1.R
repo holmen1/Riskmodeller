@@ -1,18 +1,39 @@
 ## Risk och reserv Projekt 1
 
 claims <- read.table("Projekt1_Grupp8.txt", header = TRUE, sep = ";")
-claims$ClaimDay365 <- claims$ClaimDay %% 366
+summary(claims)
 
-maxClaim1 <- max(claims$ClaimCost[claims$ClaimType==1])
-minClaim1 <- min(claims$ClaimCost[claims$ClaimType==1])
-maxClaim2 <- max(claims$ClaimCost[claims$ClaimType==2])
-minClaim2 <- min(claims$ClaimCost[claims$ClaimType==2])
+claims$ClaimDay365 <- claims$ClaimDay %% 365
+claims$ClaimDay365[claims$ClaimDay365==0] <- 365
+
+# Histogram 1Y
+par(mfrow=c(2,1))
+h1 <- claims$ClaimDay365[claims$ClaimType==1]
+b1 <- seq(min(h1), max(h1), length.out = 13)
+hist(h1, breaks=b1)
+h2 <- claims$ClaimDay365[claims$ClaimType==2]
+b2 <- seq(min(h2), max(h2), length.out = 13)
+hist(h2, breaks=b2)
+
+claims$Summer <- 0
+claims$Summer[b1[5]<claims$ClaimDay365&claims$ClaimDay365<b1[9]] <- 1
 
 obs1 <- length(claims$ClaimCost[claims$ClaimType==1])
 obs2 <- length(claims$ClaimCost[claims$ClaimType==2])
+#Winter
+obs1w <- length(claims$ClaimCost[claims$ClaimType==1&&claims$Summer==0])
+obs2w <- length(claims$ClaimCost[claims$ClaimType==2&&claims$Summer==0])
+#Summer
+obs1s <- length(claims$ClaimCost[claims$ClaimType==1&&claims$Summer==1])
+obs2s <- length(claims$ClaimCost[claims$ClaimType==2&&claims$Summer==1])
+
 
 lambda1 <- obs1 / max(claims$ClaimDay[claims$ClaimType==1])
 lambda2 <- obs2 / max(claims$ClaimDay[claims$ClaimType==1])
+
+lambda1 <- obs1 / max(claims$ClaimDay[claims$ClaimType==1])
+lambda2 <- obs2 / max(claims$ClaimDay[claims$ClaimType==1])
+
 
 ## ARRIVALS
 claims1 <- subset(claims, ClaimType == 1, select=c(ClaimDay, ClaimDay365, ClaimCost))
