@@ -14,9 +14,6 @@ obs2 <- length(claims$ClaimCost[claims$ClaimType==2])
 lambda1 <- obs1 / max(claims$ClaimDay[claims$ClaimType==1])
 lambda2 <- obs2 / max(claims$ClaimDay[claims$ClaimType==1])
 
-
-
-
 ## ARRIVALS
 claims1 <- subset(claims, ClaimType == 1, select=c(ClaimDay, ClaimDay365, ClaimCost))
 claims2 <- subset(claims, ClaimType == 2, select=c(ClaimDay, ClaimDay365, ClaimCost))
@@ -25,15 +22,10 @@ claims2 <- subset(claims, ClaimType == 2, select=c(ClaimDay, ClaimDay365, ClaimC
 C1 <- data.matrix(claims1)
 C2 <- data.matrix(claims2)
 
-# # Histogram 10Y
-# par(mfrow=c(2,1))
-# hist(C1[,1])
-# hist(C2[,1])
-
 # Histogram 1Y
 par(mfrow=c(2,1))
-hist(C1[,2],365)
-hist(C2[,2],365)
+hist(C1[,2],breaks = seq(min(C1[,2]), max(C1[,2]), length.out = 13))
+hist(C2[,2],breaks = seq(min(C2[,2]), max(C2[,2]), length.out = 13))
 
 claimsCount1Y <- aggregate(list(n=claims$ClaimDay365),list(ClaimType=claims$ClaimType,ClaimDay365=claims$ClaimDay365), length)
 check1 <- sum(claimsCount1Y$n[claimsCount1Y$ClaimType==1])
