@@ -3,10 +3,13 @@
 claims <- read.table("Projekt1_Grupp8.txt", header = TRUE, sep = ";")
 summary(claims)
 
+## ARRIVALS
+
+# Aggregate to days in 1 Y
 claims$ClaimDay365 <- claims$ClaimDay %% 365
 claims$ClaimDay365[claims$ClaimDay365==0] <- 365
 
-# Histogram 1Y
+# Histogram 1Y dividided by 12 months
 par(mfrow=c(2,1))
 h1 <- claims$ClaimDay365[claims$ClaimType==1]
 b1 <- seq(min(h1), max(h1), length.out = 13)
@@ -15,39 +18,33 @@ h2 <- claims$ClaimDay365[claims$ClaimType==2]
 b2 <- seq(min(h2), max(h2), length.out = 13)
 hist(h2, breaks=b2)
 
+# From hist, less arrivals June-August
 claims$Summer <- 0
-claims$Summer[b1[5]<claims$ClaimDay365&claims$ClaimDay365<b1[9]] <- 1
+claims$Summer[b1[5]<claims$ClaimDay365&claims$ClaimDay365<=b1[9]] <- 1
 
-obs1 <- length(claims$ClaimCost[claims$ClaimType==1])
-obs2 <- length(claims$ClaimCost[claims$ClaimType==2])
 #Winter
-obs1w <- length(claims$ClaimCost[claims$ClaimType==1&&claims$Summer==0])
-obs2w <- length(claims$ClaimCost[claims$ClaimType==2&&claims$Summer==0])
+obs1w <- length(claims$ClaimCost[claims$ClaimType==1&claims$Summer==0])
+obs2w <- length(claims$ClaimCost[claims$ClaimType==2&claims$Summer==0])
 #Summer
-obs1s <- length(claims$ClaimCost[claims$ClaimType==1&&claims$Summer==1])
-obs2s <- length(claims$ClaimCost[claims$ClaimType==2&&claims$Summer==1])
+obs1s <- length(claims$ClaimCost[claims$ClaimType==1&claims$Summer==1])
+obs2s <- length(claims$ClaimCost[claims$ClaimType==2&claims$Summer==1])
+
+# Branch 1
+lambda1w <- obs1w / max(claims$ClaimDay[claims$ClaimType==1&claims$Summer==0])
+lambda1s <- obs1s / max(claims$ClaimDay[claims$ClaimType==1&claims$Summer==1])
+# Branch 2
+lambda2w <- obs2w / max(claims$ClaimDay[claims$ClaimType==2&claims$Summer==0])
+lambda2s <- obs2s / max(claims$ClaimDay[claims$ClaimType==2&claims$Summer==1])
 
 
-lambda1 <- obs1 / max(claims$ClaimDay[claims$ClaimType==1])
-lambda2 <- obs2 / max(claims$ClaimDay[claims$ClaimType==1])
-
-lambda1 <- obs1 / max(claims$ClaimDay[claims$ClaimType==1])
-lambda2 <- obs2 / max(claims$ClaimDay[claims$ClaimType==1])
+plot(rpois(365,lambda1w),type="p")
+plot(cumsum(rpois(365,lambda1w)))
 
 
-## ARRIVALS
-claims1 <- subset(claims, ClaimType == 1, select=c(ClaimDay, ClaimDay365, ClaimCost))
-claims2 <- subset(claims, ClaimType == 2, select=c(ClaimDay, ClaimDay365, ClaimCost))
 
 
-C1 <- data.matrix(claims1)
-C2 <- data.matrix(claims2)
 
-# Histogram 1Y
-par(mfrow=c(2,1))
-hist(C1[,2],breaks = seq(min(C1[,2]), max(C1[,2]), length.out = 13))
-hist(C2[,2],breaks = seq(min(C2[,2]), max(C2[,2]), length.out = 13))
-
+# COST
 claimsCount1Y <- aggregate(list(n=claims$ClaimDay365),list(ClaimType=claims$ClaimType,ClaimDay365=claims$ClaimDay365), length)
 check1 <- sum(claimsCount1Y$n[claimsCount1Y$ClaimType==1])
 
