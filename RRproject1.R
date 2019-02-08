@@ -37,6 +37,16 @@ lambda2w <- obs2w / max(claims$ClaimDay[claims$ClaimType==2&claims$Summer==0])
 lambda2s <- obs2s / max(claims$ClaimDay[claims$ClaimType==2&claims$Summer==1])
 
 
+days<-365
+runs<-100
+res_mat<-matrix(0,days,runs)
+for(d in (1:days))
+{
+  z_vec<-rpois(runs,lambda1w)
+  res_mat[d,]<-z_vec
+}
+
+
 plot(rpois(365,lambda1w),type="p")
 plot(cumsum(rpois(365,lambda1w)))
 
