@@ -26,9 +26,7 @@ claims.365$ClaimDay365[claims.365$ClaimDay365==0] <- 365
 #head(claims.daily, n=30)
 
 claims.daily$MeanCost<-claims.daily$Cost/claims.daily$Arrivals
-head(claims.daily, n=20)
-
-
+#head(claims.daily, n=20)
 
 
 ## ARRIVALS
@@ -56,29 +54,6 @@ lambda1w<-fitdistr(claims.daily$Arrivals[claims.daily$ClaimType==1&claims.daily$
 # Branch 2
 lambda2s<-fitdistr(claims.daily$Arrivals[claims.daily$ClaimType==2&claims.daily$Summer==1],"Poisson")$estimate
 lambda2w<-fitdistr(claims.daily$Arrivals[claims.daily$ClaimType==2&claims.daily$Summer==0],"Poisson")$estimate
-
-# par(mfrow=c(2,2))
-# plot(rpois(100,lambda1s))
-# plot(rpois(100,lambda1w))
-# plot(rpois(100,lambda2s))
-# plot(rpois(100,lambda2w))
-
-
-
-
-
-
-
-
-
-days<-365
-runs<-100
-res_mat<-matrix(0,days,runs)
-for(d in (1:days))
-{
-  z_vec<-rpois(runs,lambda1w)
-  res_mat[d,]<-z_vec
-}
 
 
 ### COST
@@ -108,6 +83,46 @@ lines(dlnorm(0:max(x1),fit1[1],fit1[2]),lwd=3)
 summary(claims.daily$MeanCost[claims.daily$ClaimType==2])
 x2<-claims.daily$MeanCost[claims.daily$ClaimType==2]
 hist(x2,freq=F)
-fit2<-fitdistr(x,"weibull")$estimate
+fit2<-fitdistr(x2,"weibull")$estimate
 #fit2<-fitdistr(x,"weibull",list(shape = 10000, scale = 10), lower = 50)$estimate
 lines(dweibull(min(x2):max(x2),fit2[1],fit2[2]),lwd=3)
+
+
+### Compound
+
+
+months<-c(31,28,31,30,31,30,31,31,30,31,30,31)
+summer<-sum(months[5:8])
+winter<-sum(months[1:4])+sum(months[9:12])
+runs<-100000
+S<-matrix(0,runs,2)
+for (k in 1:runs)
+{
+  # Branch 1 lognormal claims
+  N1w<-sum(rpois(lambda1w,winter))
+  N1s<-sum(rpois(lambda1s,summer))
+  N1<-N1w+N1s
+  Y1<-rlnorm(N1,fit1[1],fit1[2])
+  S[k,1]<-sum(Y1)
+  
+  # Branch 2 Weibull claims
+  N2w<-sum(rpois(lambda2w,winter))
+  N2s<-sum(rpois(lambda2s,summer))
+  N2<-N2w+N2s
+  Y2<-rweibull(N2,fit2[1],fit2[2])
+  S[k,2]<-sum(Y2)
+}
+
+par(mfrow=c(2,1))
+hist(S[,1],100)
+hist(S[,2],100)
+
+plot(S[1:1000,1],S[1:1000,2])
+
+
+
+
+
+
+
+
