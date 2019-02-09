@@ -6,40 +6,62 @@ claims <- read.table("Projekt1_Grupp8.txt", header = TRUE, sep = ";")
 summary(claims)
 head(claims, n=10)
 
-## ARRIVALS
+arrivals.daily <- aggregate(list(Arrivals=claims$ClaimDay),list(ClaimDay=claims$ClaimDay, ClaimType=claims$ClaimType), length)
+cost.daily <- aggregate(list(Cost=claims$ClaimCost),list(ClaimDay=claims$ClaimDay, ClaimType=claims$ClaimType), sum)
 
-# Aggregate to days in 1 Y
-claims$ClaimDay365 <- claims$ClaimDay %% 365
-claims$ClaimDay365[claims$ClaimDay365==0] <- 365
+claims.daily<-merge(arrivals.daily,cost.daily)
+
+claims.365<-subset(claims, select=c("ClaimType","ClaimDay"))
+# Label to days in 1 Y 1-365
+claims.365$ClaimDay365 <- claims.365$ClaimDay %% 365
+claims.365$ClaimDay365[claims.365$ClaimDay365==0] <- 365
+
+
+## Kontroll
+#sum(claims$ClaimCost)
+#sum(claims.daily$Cost)
+#sum(claims.daily$Arrivals)
+#summary(claims)
+#summary(claims.daily)
+#head(claims.daily, n=30)
+
+claims.daily$MeanCost<-claims.daily$Cost/claims.daily$Arrivals
+head(claims.daily, n=20)
+
+
+
+
+## ARRIVALS
 
 # Histogram 1Y dividided by 12 months
 par(mfrow=c(2,1))
-h1 <- claims$ClaimDay365[claims$ClaimType==1]
+h1 <- claims.365$ClaimDay365[claims.365$ClaimType==1]
 b1 <- seq(min(h1), max(h1), length.out = 13)
 hist(h1, breaks=b1)
-h2 <- claims$ClaimDay365[claims$ClaimType==2]
+h2 <- claims.365$ClaimDay365[claims.365$ClaimType==2]
 b2 <- seq(min(h2), max(h2), length.out = 13)
 hist(h2, breaks=b2)
 
 # From hist, less arrivals June-August
-claims$Summer <- 0
-claims$Summer[b1[5]<claims$ClaimDay365&claims$ClaimDay365<=b1[9]] <- 1
+# Label to days in 1 Y 1-365
+claims.daily$ClaimDay365 <- claims.daily$ClaimDay %% 365
+claims.daily$ClaimDay365[claims.daily$ClaimDay365==0] <- 365
 
-arrivals.daily <- aggregate(list(Arrivals=claims$ClaimDay),list(ClaimDay=claims$ClaimDay, ClaimDay365=claims$ClaimDay365, ClaimType=claims$ClaimType,Summer=claims$Summer), length)
-head(arrivals.daily, n=20)
+claims.daily$Summer <- 0
+claims.daily$Summer[b1[5]<claims.daily$ClaimDay365&claims.daily$ClaimDay365<=b1[9]] <- 1
 
 # Branch 1
-lambda1s<-fitdistr(arrivals.daily$n[arrivals.daily$ClaimType==1&arrivals.daily$Summer==1],"Poisson")$estimate
-lambda1w<-fitdistr(arrivals.daily$n[arrivals.daily$ClaimType==1&arrivals.daily$Summer==0],"Poisson")$estimate
+lambda1s<-fitdistr(claims.daily$Arrivals[claims.daily$ClaimType==1&claims.daily$Summer==1],"Poisson")$estimate
+lambda1w<-fitdistr(claims.daily$Arrivals[claims.daily$ClaimType==1&claims.daily$Summer==0],"Poisson")$estimate
 # Branch 2
-lambda2s<-fitdistr(arrivals.daily$n[arrivals.daily$ClaimType==2&arrivals.daily$Summer==1],"Poisson")$estimate
-lambda2w<-fitdistr(arrivals.daily$n[arrivals.daily$ClaimType==2&arrivals.daily$Summer==0],"Poisson")$estimate
+lambda2s<-fitdistr(claims.daily$Arrivals[claims.daily$ClaimType==2&claims.daily$Summer==1],"Poisson")$estimate
+lambda2w<-fitdistr(claims.daily$Arrivals[claims.daily$ClaimType==2&claims.daily$Summer==0],"Poisson")$estimate
 
-par(mfrow=c(2,2))
-plot(rpois(100,lambda1s))
-plot(rpois(100,lambda1w))
-plot(rpois(100,lambda2s))
-plot(rpois(100,lambda2w))
+# par(mfrow=c(2,2))
+# plot(rpois(100,lambda1s))
+# plot(rpois(100,lambda1w))
+# plot(rpois(100,lambda2s))
+# plot(rpois(100,lambda2w))
 
 
 
@@ -59,67 +81,25 @@ for(d in (1:days))
 }
 
 
-# COST
-cost.daily <- aggregate(list(Cost=claims$ClaimCost),list(ClaimDay=claims$ClaimDay, ClaimDay365=claims$ClaimDay365, ClaimType=claims$ClaimType,Summer=claims$Summer), sum)
-head(cost.daily, n=20)
+### COST
+head(claims.daily, n=20)
 
 par(mfrow=c(2,1))
-hist(cost.daily$Cost[cost.daily$ClaimType==1])
-hist(cost.daily$Cost[cost.daily$ClaimType==2])
+plot(claims.daily$ClaimDay[claims.daily$ClaimType==1],claims.daily$MeanCost[claims.daily$ClaimType==1])
+plot(claims.daily$ClaimDay[claims.daily$ClaimType==2],claims.daily$MeanCost[claims.daily$ClaimType==2])
 
 par(mfrow=c(2,1))
-plot(cost.daily$ClaimDay[cost.daily$ClaimType==1],cost.daily$Cost[cost.daily$ClaimType==1])
-plot(cost.daily$ClaimDay[cost.daily$ClaimType==2],cost.daily$Cost[cost.daily$ClaimType==2])
+hist(claims.daily$MeanCost[claims.daily$ClaimType==1],100)
+hist(claims.daily$MeanCost[claims.daily$ClaimType==2],100)
 
-
-
-claimsCount1Y <- aggregate(list(n=claims$ClaimDay365),list(ClaimType=claims$ClaimType,ClaimDay365=claims$ClaimDay365), length)
-check1 <- sum(claimsCount1Y$n[claimsCount1Y$ClaimType==1])
-
-claimsCountY1 <- subset(claimsCount1Y, ClaimType == 1, select=c(ClaimDay365, n))
-claimsCountY2 <- subset(claimsCount1Y, ClaimType == 2, select=c(ClaimDay365, n))
-
-par(mfrow=c(2,2))
-plot(claimsCountY1)
-plot(claimsCountY2)
-plot(rpois(365,lambda1s))
-plot(rpois(365,lambda2))
-
-
-## COST
+# Empirisk fördelningsfunktion
 par(mfrow=c(2,1))
-plot(claims$ClaimCost[claims$ClaimType==1])
-plot(claims$ClaimCost[claims$ClaimType==2])
+plot(ecdf(claims.daily$MeanCost[claims.daily$ClaimType==1]))
+plot(ecdf(claims.daily$MeanCost[claims.daily$ClaimType==2]))
 
-hist(claims$ClaimCost[claims$ClaimType==1],1000)
-hist(claims$ClaimCost[claims$ClaimType==2],1000)
-
-claims2<-claims$ClaimCost[claims$ClaimType==2]
-
-cost2<-subset(claims, ClaimType == 2, select=c(ClaimCost))
-claims[claims$ClaimType==2][order(claims$ClaimCost)]
-
-plot(c(1:length(cost2$ClaimCost)),sort(cost2$ClaimCost))
-
-claimsMeanCost10Y <- aggregate(list(MeanCost=claims$ClaimCost),list(ClaimType=claims$ClaimType,ClaimDay=claims$ClaimDay), mean)
-claimsMeanCost1Y <- aggregate(list(MeanCost=claims$ClaimCost),list(ClaimType=claims$ClaimType,ClaimDay365=claims$ClaimDay365), mean)
-
-
-# claimsCost1 <- subset(claimsMeanCost10Y, ClaimType == 1, select=c(ClaimDay, MeanCost))
-# claimsCost2 <- subset(claimsMeanCost10Y, ClaimType == 2, select=c(ClaimDay, MeanCost))
-# 
-# par(mfrow=c(2,1))
-# plot(claimsCost1)
-# plot(claimsCost2)
-
-claimsCostY1 <- subset(claimsMeanCost1Y, ClaimType == 1, select=c(ClaimDay365, MeanCost))
-claimsCostY2 <- subset(claimsMeanCost1Y, ClaimType == 2, select=c(ClaimDay365, MeanCost))
-
-par(mfrow=c(2,1))
-plot(claimsCostY1)
-plot(claimsCostY2)
-
-
-x<-rpois(100, lambda=10)
-x
-
+# Claims 1
+summary(claims.daily$MeanCost[claims.daily$ClaimType==1])
+x<-claims.daily$MeanCost[claims.daily$ClaimType==1]
+hist(x,freq=F)
+fit1<-fitdistr(x,"lognormal")$estimate
+lines(dlnorm(0:max(x),fit1[1],fit1[2]),lwd=3)
