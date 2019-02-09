@@ -99,7 +99,15 @@ plot(ecdf(claims.daily$MeanCost[claims.daily$ClaimType==2]))
 
 # Claims 1
 summary(claims.daily$MeanCost[claims.daily$ClaimType==1])
-x<-claims.daily$MeanCost[claims.daily$ClaimType==1]
-hist(x,freq=F)
-fit1<-fitdistr(x,"lognormal")$estimate
-lines(dlnorm(0:max(x),fit1[1],fit1[2]),lwd=3)
+x1<-claims.daily$MeanCost[claims.daily$ClaimType==1]
+hist(x1,freq=F)
+fit1<-fitdistr(x1,"lognormal")$estimate
+lines(dlnorm(0:max(x1),fit1[1],fit1[2]),lwd=3)
+
+# Claims 2
+summary(claims.daily$MeanCost[claims.daily$ClaimType==2])
+x2<-claims.daily$MeanCost[claims.daily$ClaimType==2]
+hist(x2,freq=F)
+fit2<-fitdistr(x,"weibull")$estimate
+#fit2<-fitdistr(x,"weibull",list(shape = 10000, scale = 10), lower = 50)$estimate
+lines(dweibull(min(x2):max(x2),fit2[1],fit2[2]),lwd=3)
