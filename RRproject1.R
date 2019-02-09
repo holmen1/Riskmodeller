@@ -25,21 +25,28 @@ hist(h2, breaks=b2)
 claims$Summer <- 0
 claims$Summer[b1[5]<claims$ClaimDay365&claims$ClaimDay365<=b1[9]] <- 1
 
-claims.daily <- aggregate(list(n=claims$ClaimDay),list(ClaimDay=claims$ClaimDay, ClaimDay365=claims$ClaimDay365, ClaimType=claims$ClaimType,Summer=claims$Summer), length)
-head(claims.daily, n=20)
+arrivals.daily <- aggregate(list(Arrivals=claims$ClaimDay),list(ClaimDay=claims$ClaimDay, ClaimDay365=claims$ClaimDay365, ClaimType=claims$ClaimType,Summer=claims$Summer), length)
+head(arrivals.daily, n=20)
 
 # Branch 1
-lambda1s<-fitdistr(claims.daily$n[claims.daily$ClaimType==1&claims.daily$Summer==1],"Poisson")$estimate
-lambda1w<-fitdistr(claims.daily$n[claims.daily$ClaimType==1&claims.daily$Summer==0],"Poisson")$estimate
+lambda1s<-fitdistr(arrivals.daily$n[arrivals.daily$ClaimType==1&arrivals.daily$Summer==1],"Poisson")$estimate
+lambda1w<-fitdistr(arrivals.daily$n[arrivals.daily$ClaimType==1&arrivals.daily$Summer==0],"Poisson")$estimate
 # Branch 2
-lambda2s<-fitdistr(claims.daily$n[claims.daily$ClaimType==2&claims.daily$Summer==1],"Poisson")$estimate
-lambda2w<-fitdistr(claims.daily$n[claims.daily$ClaimType==2&claims.daily$Summer==0],"Poisson")$estimate
+lambda2s<-fitdistr(arrivals.daily$n[arrivals.daily$ClaimType==2&arrivals.daily$Summer==1],"Poisson")$estimate
+lambda2w<-fitdistr(arrivals.daily$n[arrivals.daily$ClaimType==2&arrivals.daily$Summer==0],"Poisson")$estimate
 
 par(mfrow=c(2,2))
 plot(rpois(100,lambda1s))
 plot(rpois(100,lambda1w))
 plot(rpois(100,lambda2s))
 plot(rpois(100,lambda2w))
+
+
+
+
+
+
+
 
 
 days<-365
@@ -53,6 +60,19 @@ for(d in (1:days))
 
 
 # COST
+cost.daily <- aggregate(list(Cost=claims$ClaimCost),list(ClaimDay=claims$ClaimDay, ClaimDay365=claims$ClaimDay365, ClaimType=claims$ClaimType,Summer=claims$Summer), sum)
+head(cost.daily, n=20)
+
+par(mfrow=c(2,1))
+hist(cost.daily$Cost[cost.daily$ClaimType==1])
+hist(cost.daily$Cost[cost.daily$ClaimType==2])
+
+par(mfrow=c(2,1))
+plot(cost.daily$ClaimDay[cost.daily$ClaimType==1],cost.daily$Cost[cost.daily$ClaimType==1])
+plot(cost.daily$ClaimDay[cost.daily$ClaimType==2],cost.daily$Cost[cost.daily$ClaimType==2])
+
+
+
 claimsCount1Y <- aggregate(list(n=claims$ClaimDay365),list(ClaimType=claims$ClaimType,ClaimDay365=claims$ClaimDay365), length)
 check1 <- sum(claimsCount1Y$n[claimsCount1Y$ClaimType==1])
 
