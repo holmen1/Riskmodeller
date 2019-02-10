@@ -73,8 +73,12 @@ C2<-quantile(S[,2],u[,2],type=4)
 z<-cbind(C1,C2)
 pairs.panels(z)
 
+### BOOTSTRAP
 
+head(claims.daily,n=40)
+claims.daily$Month<-claims.daily$ClaimDay365 %/% 31
 
+claims.monthly<-aggregate(list(Cost=claims.daily$Cost),list(Month=claims.daily$Month, ClaimType=claims.daily$ClaimType), sum)
 
-
+head(claims.monthly,n=40)
 
