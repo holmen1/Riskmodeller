@@ -120,7 +120,7 @@ hist(S[,2],100)
 plot(S[1:1000,1],S[1:1000,2])
 
 
-
+save(claims.daily, fit1, fit2, lambda1s,lambda1w,lambda2s,lambda2w, file = "fitted.RData")
 
 
 
