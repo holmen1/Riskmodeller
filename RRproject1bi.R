@@ -75,7 +75,18 @@ pairs.panels(z)
 
 ### BOOTSTRAP
 
-head(claims.daily,n=40)
+claims.daily$Year <- claims.daily$ClaimDay%/%366
+claims.daily$Month <- 0
+months<-c(0,31,28,31,30,31,30,31,31,30,31,30,31)
+months.cum<-cumsum(months)
+for (m in 1:(length(months.cum)-1))
+  claims.daily$Month[months.cum[m] < claims.daily$ClaimDay365 & claims.daily$ClaimDay365 <= months.cum[m+1]]<- m
+
+
+bs.samples<-100
+random.months<-ceiling(runif(bs.samples)*12)
+
+
 claims.daily$Month<-claims.daily$ClaimDay365 %/% 31
 
 claims.monthly<-aggregate(list(Cost=claims.daily$Cost),list(Month=claims.daily$Month, ClaimType=claims.daily$ClaimType), sum)
