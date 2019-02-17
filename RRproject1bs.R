@@ -22,8 +22,6 @@ cost.by.month<-aggregate(list(Cost=claims.daily$Cost),list(Year=claims.daily$Yea
 
 plot(cost.by.month$Cost[cost.by.month$ClaimType==1],cost.by.month$Cost[cost.by.month$ClaimType==2])
 
-tmp1 <- subset(cost.by.month, ClaimType == 1, select=c(Year,Month,Cost))
-tmp2 <- subset(cost.by.month, ClaimType == 2, select=c(Year,Month,Cost))
 
 tmp<-unique(cost.by.month[c("Year","Month")])
 tmp$Cost1<-cost.by.month$Cost[tmp$Year==cost.by.month$Year & tmp$Month==cost.by.month$Month & cost.by.month$ClaimType == 1]
@@ -34,13 +32,36 @@ bs.samples<-1000
 BS<-matrix(0,bs.samples,2)
 for (k in 1:bs.samples)
 {
-  sample<-tmp[sample(nrow(tmp),12, replace=TRUE),]
-  BS[k,1]<-sum(sample$Cost1)
-  BS[k,2]<-sum(sample$Cost2)
+  s<-tmp[sample(nrow(tmp),12, replace=TRUE),]
+  BS[k,1]<-sum(s$Cost1)
+  BS[k,2]<-sum(s$Cost2)
 }
 
 plot(BS[,1],BS[,2])
 cor(BS[,1],BS[,2])
+
+winter.months<-c(1,2,3,4,9,10,11,12)
+summer.months<-c(5,6,7)
+
+
+# Winter
+cost.winter<-subset(tmp, is.element(tmp$Month, winter.months), 
+       select=c(Cost1,Cost2))
+# Summer
+cost.summer<-subset(tmp, is.element(tmp$Month, summer.months), 
+                    select=c(Cost1,Cost2))
+
+BS.seasonal<-matrix(0,bs.samples,2)
+for (k in 1:bs.samples)
+{
+  s.W<-tmp[sample(nrow(cost.winter),8, replace=TRUE),]
+  s.S<-tmp[sample(nrow(cost.summer),4, replace=TRUE),]
+  BS.seasonal[k,1]<-sum(s.W$Cost1) + sum(s.S$Cost1)
+  BS.seasonal[k,2]<-sum(s.W$Cost2) + sum(s.S$Cost2)
+}
+
+plot(BS.seasonal[,1],BS.seasonal[,2])
+cor(BS.seasonal[,1],BS.seasonal[,2])
 
 
 
