@@ -16,6 +16,28 @@ for (m in 1:(length(months.cum)-1))
   claims.daily$Month[months.cum[m] < claims.daily$ClaimDay365 & claims.daily$ClaimDay365 <= months.cum[m+1]]<- m
 
 cost.by.month<-aggregate(list(Cost=claims.daily$Cost),list(Year=claims.daily$Year, Month=claims.daily$Month, ClaimType=claims.daily$ClaimType), sum)
+cost.by.year<-aggregate(list(Cost=cost.by.month$Cost),list(Year=cost.by.month$Year, ClaimType=cost.by.month$ClaimType), sum)
+
+
+plot(cost.by.year$Cost[cost.by.year$ClaimType==1],cost.by.year$Cost[cost.by.year$ClaimType==2])
+cor(cost.by.year$Cost[cost.by.year$ClaimType==1],cost.by.year$Cost[cost.by.year$ClaimType==2])
+
+s1<-subset(cost.by.year, cost.by.year$ClaimType==1,select=c(Year,Cost))
+s2<-subset(cost.by.year, cost.by.year$ClaimType==2,select=c(Year,Cost))
+Y<-matrix(0,10,2)
+for (k in 1:10)
+{
+  Y[k,1]<-s1$Cost[s1$Year==(k-1)]
+  Y[k,2]<-s2$Cost[s2$Year==(k-1)]
+}
+
+plot(Y[,1],Y[,2])
+cor(Y[,1],Y[,2])
+
+
+
+
+
 
 # Kontroll
 #sum(claims.daily$Cost)==sum(cost.by.month$Cost)
