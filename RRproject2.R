@@ -16,56 +16,75 @@ claims$PaymentDay365[claims$PaymentDay365==0] <- 365
 claims$ClaimYear <- claims$ClaimDay %/% 366
 claims$PaymentYear <- claims$PaymentDay %/% 366
 
+claims.yearly <- aggregate(ClaimCost ~ ClaimType + ClaimYear + PaymentYear, data=claims, FUN=sum)
+claims.yearly$Development <- claims.yearly$PaymentYear - claims.yearly$ClaimYear
 
 
+sub.1 <- subset(claims.yearly, is.element(ClaimType, 1))
+triangle.1 <- incr2cum(as.triangle(sub.1,
+                                    origin="ClaimYear",
+                                    dev="Development",
+                                    value="ClaimCost"), na.rm = FALSE)
 
-summary(claims)
-head(claims, n=1000)
+sub.2 <- subset(claims.yearly, is.element(ClaimType, 2))
+triangle.2 <- incr2cum(as.triangle(sub.2,
+                                   origin="ClaimYear",
+                                   dev="Development",
+                                   value="ClaimCost"), na.rm = FALSE)
 
-claims.1 <- subset(claims,
-                   ClaimType == 1,
-                   select=c(ClaimDay,ClaimDay365,ClaimYear,PaymentDay,PaymentDay365,PaymentYear,ClaimCost))
-claims.2 <- subset(claims,
-                   ClaimType == 2,
-                   select=c(ClaimDay,ClaimDay365,ClaimYear,PaymentDay,PaymentDay365,PaymentYear,ClaimCost))
 
-claims.1.yearly <- aggregate(ClaimCost ~ ClaimYear + PaymentYear, data=claims.1, FUN=sum)
-claims.2.yearly <- aggregate(ClaimCost ~ ClaimYear + PaymentYear, data=claims.2, FUN=sum)
-
-#write.csv(claims.1.yearly, file = "claims1Y.csv")
-#write.csv(claims.2.yearly, file = "claims2Y.csv")
-
-claims.1.yearly$Development <- claims.1.yearly$PaymentYear - claims.1.yearly$ClaimYear
-claims.2.yearly$Development <- claims.2.yearly$PaymentYear - claims.2.yearly$ClaimYear
-
-# Claim triangles 1 & 2
-m1 <- max(claims.1.yearly$ClaimYear) + 1
-n1 <- max(claims.1.yearly$Development) + 1
-T.1 <- matrix(0,m1,n1)
-for (m in 1:m1)
-{
-  for (n in 1:n1)
-  {
-    c <- claims.1.yearly$ClaimCost[claims.1.yearly$ClaimYear == (m-1) &
-                                   claims.1.yearly$Development == (n-1)]
-    T.1[m,n] <- max(0,c)
-  }
-}
-triangle.1 <- incr2cum(as.triangle(T.1))
-
-m2 <- max(claims.2.yearly$ClaimYear) + 1
-n2 <- max(claims.2.yearly$Development) + 1
-T.2 <- matrix(0,m2,n2)
-for (m in 1:m2)
-{
-  for (n in 1:n2)
-  {
-    c <- claims.2.yearly$ClaimCost[claims.2.yearly$ClaimYear == (m-1) &
-                                   claims.2.yearly$Development == (n-1)]
-    T.2[m,n] <- max(0,c)
-  }
-}
-triangle.2 <- incr2cum(as.triangle(T.2))
+# summary(claims)
+# head(claims, n=1000)
+# 
+# claims.1 <- subset(claims,
+#                    ClaimType == 1,
+#                    select=c(ClaimDay,ClaimDay365,ClaimYear,PaymentDay,PaymentDay365,PaymentYear,ClaimCost))
+# claims.2 <- subset(claims,
+#                    ClaimType == 2,
+#                    select=c(ClaimDay,ClaimDay365,ClaimYear,PaymentDay,PaymentDay365,PaymentYear,ClaimCost))
+# 
+# claims.1.yearly <- aggregate(ClaimCost ~ ClaimYear + PaymentYear, data=claims.1, FUN=sum)
+# claims.2.yearly <- aggregate(ClaimCost ~ ClaimYear + PaymentYear, data=claims.2, FUN=sum)
+# 
+# #write.csv(claims.1.yearly, file = "claims1Y.csv")
+# #write.csv(claims.2.yearly, file = "claims2Y.csv")
+# 
+# claims.1.yearly$Development <- claims.1.yearly$PaymentYear - claims.1.yearly$ClaimYear
+# claims.2.yearly$Development <- claims.2.yearly$PaymentYear - claims.2.yearly$ClaimYear
+# 
+# 
+# 
+# 
+# 
+# 
+# # Claim triangles 1 & 2
+# m1 <- max(claims.1.yearly$ClaimYear) + 1
+# n1 <- max(claims.1.yearly$Development) + 1
+# T.1 <- matrix(0,m1,n1)
+# for (m in 1:m1)
+# {
+#   for (n in 1:n1)
+#   {
+#     c <- claims.1.yearly$ClaimCost[claims.1.yearly$ClaimYear == (m-1) &
+#                                    claims.1.yearly$Development == (n-1)]
+#     T.1[m,n] <- max(0,c)
+#   }
+# }
+# triangle.1 <- incr2cum(as.triangle(T.1), na.rm=TRUE)
+# 
+# m2 <- max(claims.2.yearly$ClaimYear) + 1
+# n2 <- max(claims.2.yearly$Development) + 1
+# T.2 <- matrix(0,m2,n2)
+# for (m in 1:m2)
+# {
+#   for (n in 1:n2)
+#   {
+#     c <- claims.2.yearly$ClaimCost[claims.2.yearly$ClaimYear == (m-1) &
+#                                    claims.2.yearly$Development == (n-1)]
+#     T.2[m,n] <- max(0,c)
+#   }
+# }
+# triangle.2 <- incr2cum(as.triangle(T.2))
 
 
 plot(triangle.1)
