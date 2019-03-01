@@ -61,8 +61,26 @@ mack.1$f
 mack.1$FullTriangle
 plot(mack.1)
 
-CC.1[3,8]*10
+#CC.1[3,8]*10 koll
 
+L <- length(CC.1[1,])
+par(mfrow=c(4,1))
+for (col in 1:4)
+{
+  r1 <- !is.na(CC.1[,col])
+  r2 <- !is.na(CC.1[,col+1])
+  r <- r1 & r2
+  plot(CC.1[r,col],CC.1[r,col+1])
+}
+
+par(mfrow=c(3,1))
+for (col in 5:(L-1))
+{
+  r1 <- !is.na(CC.1[,col])
+  r2 <- !is.na(CC.1[,col+1])
+  r <- r1 & r2
+  plot(CC.1[r,col],CC.1[r,col+1])
+}
 
 
 
