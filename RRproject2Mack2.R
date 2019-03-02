@@ -1,6 +1,8 @@
 ## Risk och reserv Projekt 2
 
 #library(ChainLadder)
+#library(xtable)
+
 
 claims <- read.table("Projekt2_Grupp8.txt", header = TRUE, sep = ";")
 summary(claims)
