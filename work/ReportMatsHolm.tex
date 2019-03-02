@@ -1,0 +1,116 @@
+\documentclass[11pt]{article}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath}
+\usepackage{epstopdf}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\title{Report I - MT7027 Risk Models and Reserving in Non-Life Insurance}
+\author{Mats Holm nnnnnn-nnnn }
+\date{8 March, 2019}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+\section*{Project I}
+\subsection*{Objectives}
+({\it Instructions: highlight the project objectives})
+\\
+In this project we consider ...
+
+\subsection*{Mathematical Background}
+({\it Instructions: provide a mathematical background by explaining the key concepts used in your analysis})
+
+Formulas and equations without label:
+\begin{align*}
+	S_t = \sum_{k=1}^{N_t} X_k
+\end{align*}
+Formulas and equations with label:
+\begin{align}\label{eq:N}
+	N_t = \sum_{k=1}^{n} I_k
+\end{align}
+In \eqref{eq:N} we express $N_t$ in terms of $I_1,\dots,I_n$. The indicator variables are defined on page 16 in \cite{Wuthrich-Merz-13}.
+
+\subsubsection*{The empirical distribution}
+The empirical distribution of a sample $Z_1, \dots, Z_n$ of independent and identically distributed random variables or vectors is $\ldots$
+
+\subsubsection*{...other relevant topics...}
+
+\subsection*{Results}
+
+({\it Explain your derivation of ... and display and comment on your simulation results, etc. Include tables and figures as needed and refer to them as follows. In Table \ref{tab:sampletab} we see an example of a sample table. In Figure \ref{fig:samplefig1} we see an example of sample graphics with a single plot, whereas in Figure \ref{fig:samplefig2} we see an example with two plots.}) 
+
+\begin{table}[!ht]
+\center
+\begin{tabular}{rrr|r}
+Name & Street & Number & Room\\ 
+\hline
+Mathias & Roslagsv. & 101 & 324\\
+Filip & Roslagsv. & 101 & 330\\
+\hline
+\end{tabular}
+\caption{Sample table. Use informative captions.} \label{tab:sampletab}
+\end{table}
+
+
+ \begin{figure}[!ht]
+ \center
+ % \includegraphics[scale=.5]{ExampleFig.eps}
+  \caption{Sample graphics. Use informative captions}
+  \label{fig:samplefig1}
+\end{figure}
+
+
+ \begin{figure}[!ht]
+ \center
+  %\includegraphics[scale=.35]{ExampleFig.eps}  \includegraphics[scale=.35]{ExampleFig.eps}
+  \caption{\emph{Left:} Sample graphics 1. \emph{Right:} Sample graphics 2.}
+  \label{fig:samplefig2}
+\end{figure}
+
+
+\subsection*{Summary}
+({\it Summarize your results and state your conclusions. })
+
+
+
+\begin{thebibliography}{99}
+\bibitem{Dupire-94}
+B. Dupire (1994),
+Pricing with a smile.
+\emph{Risk}, 7, 18-20.
+\bibitem{Wuthrich-Merz-13}
+  Mario V. W\"{u}thrich and Michael Merz (2013),
+  \emph{Financial Modeling, Actuarial Valuation and Solvency in Insurance},
+  Springer-Verlag Berlin Heidelberg.
+\end{thebibliography}
+
+
+\section*{Appendix}
+
+\begin{verbatim}
+# Ex 1.3
+
+n_val<-1000
+runs<-10000
+res_mat2<-matrix(0,runs,3)
+for(i in (1:runs))
+{
+	z_val<-rnorm(1)
+	z_vec<-rnorm(n_val)
+	res_mat2[i,1]<-sum(exp(z_vec))
+	res_mat2[i,3]<-sum(exp(0.1*z_val+sqrt(1-0.1^2)*z_vec))
+}
+
+par(mfrow=c(1,2))
+hist(res_mat2[,1],75,xlab="",ylab="",main="rho=0",xlim=c(min(res_mat2),max(res_mat2)),
+col="black")
+hist(res_mat2[,3],75,xlab="",ylab="",main="rho=0.1",xlim=c(min(res_mat2),max(res_mat2)),
+col="black")
+\end{verbatim}
+
+
+
+\end{document}  

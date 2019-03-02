@@ -21,6 +21,24 @@ triangle.2 <- incr2cum(as.triangle(sub.2.yearly,
                                    dev="Development",
                                    value="ClaimCost"), na.rm = FALSE)
 
+# Chainladder
+n <- 10
+f <- sapply(1:(n-1),
+               function(i){
+                 sum(triangle.2[c(1:(n-i)),i+1])/sum(triangle.2[c(1:(n-i)),i])
+               }
+)
+
+sigma <- sapply(1:(n-1),
+            function(i){
+              sum(triangle.2[c(1:(n-i)),i]*(triangle.2[c(1:(n-i)),i+1]/triangle.2[c(1:(n-i)),i] - f[i])^2)/(n-i-1)
+            }
+)
+
+
+
+
+
 mack.2 <- MackChainLadder(triangle.2, est.sigma="Mack")
 mack.2
 mack.2$f
