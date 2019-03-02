@@ -17,8 +17,8 @@ sub.2.yearly <- aggregate(ClaimCost ~ ClaimYear + PaymentYear, data=sub.2, FUN=s
 sub.2.yearly$Development <- sub.2.yearly$PaymentYear - sub.2.yearly$ClaimYear
 
 #
-sub.2.yearly <- subset(sub.2.yearly, ClaimYear > 9)
-triangle.2 <- incr2cum(as.triangle(sub.2.yearly,
+s.2.yearly <- subset(sub.2.yearly, ClaimYear > 9)
+T.2 <- incr2cum(as.triangle(s.2.yearly,
                                    origin="ClaimYear",
                                    dev="Development",
                                    value="ClaimCost"), na.rm = FALSE)
@@ -27,13 +27,13 @@ triangle.2 <- incr2cum(as.triangle(sub.2.yearly,
 n <- 10
 f <- sapply(1:(n-1),
                function(i){
-                 sum(triangle.2[c(1:(n-i)),i+1])/sum(triangle.2[c(1:(n-i)),i])
+                 sum(T.2[c(1:(n-i)),i+1])/sum(T.2[c(1:(n-i)),i])
                }
 )
 
 sigma <- sapply(1:(n-1),
             function(i){
-              sum(triangle.2[c(1:(n-i)),i]*(triangle.2[c(1:(n-i)),i+1]/triangle.2[c(1:(n-i)),i] - f[i])^2)/(n-i-1)
+              sum(T.2[c(1:(n-i)),i]*(T.2[c(1:(n-i)),i+1]/T.2[c(1:(n-i)),i] - f[i])^2)/(n-i-1)
             }
 )
 
@@ -41,13 +41,20 @@ sigma <- sapply(1:(n-1),
 
 
 
-mack.2 <- MackChainLadder(triangle.2, est.sigma="Mack")
+mack.2 <- MackChainLadder(T.2, est.sigma="Mack")
 mack.2
 mack.2$f
 mack.2$FullTriangle
 plot(mack.2)
 
 
+#4 First 10 years
+
+s.22.yearly <- subset(sub.2.yearly, ClaimYear < 11 & Development < 10)
+T.22 <- incr2cum(as.triangle(s.22.yearly,
+                                   origin="ClaimYear",
+                                   dev="Development",
+                                   value="ClaimCost"), na.rm = FALSE)
 
 
 
