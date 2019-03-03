@@ -157,12 +157,25 @@ Before creating cumulative distribution, we check dependence between historical 
 
 %%% CUMULATIVE
 \subsection*{Bivariate total claims cost}
+With the help of R 
+First
+\begin{align} \label{eq:bi1}
+	 \begin{bmatrix} Z_1 \\ Z_2\end{bmatrix} \sim N\left(\begin{bmatrix} 0 \\ 0\end{bmatrix},\begin{bmatrix} 1&\rho \\ \rho&1\end{bmatrix}\right)
+\end{align}
+then pair
+ 
+and since	   $\left(\Phi(Z_1),\Phi(Z_2)\right) \sim  U[0,1] \times U[0,1]$ .
 
+We get
+\begin{align} \label{eq:bi3}
+	  \left(\tilde{S_1},\tilde{S_2}\right) = \left(\hat{F}_X^\leftharpoonup(\Phi(Z_1)),\hat{F}_Y^\leftharpoonup(\Phi(Z_2))\right) 
+\end{align}
+a Gaussian copula $ \left(\tilde{S_1},\tilde{S_2}\right)$, where $(\hat{F}_X^\leftharpoonup$ and $\hat{F}_Y^\leftharpoonup$ are inverse of empirical cdf from $\hat{X}$ and $\hat{Y}$ respectively.
 
  \begin{figure}[H]
  \center
   \includegraphics[scale=.5]{pairs.png}
-  \caption{Gauss Copula}
+  \caption{Gaussian Copula}
   \label{fig:samplefig5}
 \end{figure}
 
@@ -173,59 +186,6 @@ Before creating cumulative distribution, we check dependence between historical 
 \subsection*{SL cover}
 
 
-
-
-
-
-%
-%Formulas and equations without label:
-%\begin{align*}
-%	S_t = \sum_{k=1}^{N_t} X_k
-%\end{align*}
-%Formulas and equations with label:
-%\begin{align}\label{eq:N}
-%	N_t = \sum_{k=1}^{n} I_k
-%\end{align}
-%In \eqref{eq:N} we express $N_t$ in terms of $I_1,\dots,I_n$. The indicator variables are defined on page 16 in \cite{Wuthrich-Merz-13}.
-
-\subsubsection*{The empirical distribution}
-The empirical distribution of a sample $Z_1, \dots, Z_n$ of independent and identically distributed random variables or vectors is $\ldots$
-
-\subsubsection*{...other relevant topics...}
-
-
-
-
-
-\subsection*{Results}
-
-
-
-Formulas and equations without label:
-\begin{align*}
-	\hat{f_k} = \dfrac{\sum_{i=1}^{n-k} C_{i,k+1}} {\sum_{i=1}^{n-k} C_{i,k}}
-\end{align*}
-
-\begin{align*}
-	\hat{R_k} = C_{k,I+1-k} \left(  \hat{f}_{I+1-k} \cdots \hat{f}=_{I-1}-1\right)
-\end{align*}
-
-%\begin{align}\label{eq:N}
-%	\hat{\sigma}_k^2 = \dfrac{1}{I-n-1} \sum_{i=1}^{n-k} C_{i,k}\left( \dfrac{ C_{i,k+1}}{ C_{i,k}} -\hat{f_k} \right)^2
-%\end{align}
-%In \eqref{eq:N} we express $N_t$ in terms of $I_1,\dots,I_n$. The indicator variables are defined on page 16 in \cite{Wuthrich-Merz-13}.
-
-\begin{table}[!ht]
-\center
-\begin{tabular}{rr}
-	& Totals \\ 
-\hline
-IBNR: & 54,527,000 \\
-Mack S:E & 4,235,733\\
-\hline
-\end{tabular}
-\caption{Sample table. Use informative captions.} \label{tab:sampletab}
-\end{table}
 
 
 

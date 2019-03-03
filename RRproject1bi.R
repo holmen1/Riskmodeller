@@ -90,14 +90,14 @@ sigma <- matrix(c(1.0,  rho.total,
                   rho.total,  1.0), nrow=2)
 x <- mvrnorm(n, mu=rep(0, 2), Sigma=sigma, empirical=TRUE)
 
-# Transform to U[0,1] u=F(x)
+# Transform to U[0,1]xU[0,1] u=F(x)
 u <- pnorm(x)
 
 # Inverse of empirical cdf from sampled marginaldistribution 
-C1<-quantile(S[,1],u[,1],type=4)
-C2<-quantile(S[,2],u[,2],type=4)
+S1<-quantile(S[,1],u[,1],type=4)
+S2<-quantile(S[,2],u[,2],type=4)
 
-z<-cbind(C1,C2)
+z<-cbind(S1,S2)
 pairs.panels(z)
 
 
