@@ -28,9 +28,8 @@ for (k in s1$ClaimDay)
   Y[i,2]<-s2$Cost[s2$ClaimDay==k]
   i=i+1
 }
-#plot(Y[,1],Y[,2])
 rho.total<-cor(Y[,1],Y[,2]) #= 0.5277435
-
+plot(Y[,1],Y[,2],main=paste("rho=",rho.total))
 
 # # Kontroll
 # sum(cost.year$Cost[cost.year$ClaimType==1])
@@ -57,22 +56,22 @@ plot(cost.yearend$Cost[cost.yearend$ClaimType==1&cost.yearend$ClaimYear<10],
 #Omkontroll korrelation
 s1<-subset(cost.yearend, cost.yearend$ClaimType==1,select=c(ClaimYear,Cost))
 s2<-subset(cost.yearend, cost.yearend$ClaimType==2,select=c(ClaimYear,Cost))
-Y<-matrix(0,9,2)
+Y2<-matrix(0,9,2)
 for (k in 1:9)
 {
-  Y[k,1]<-s1$Cost[s1$ClaimYear==k]
-  Y[k,2]<-s2$Cost[s2$ClaimYear==k]
+  Y2[k,1]<-s1$Cost[s1$ClaimYear==k]
+  Y2[k,2]<-s2$Cost[s2$ClaimYear==k]
 }
 #plot(Y[,1],Y[,2])
-rho.yearend.ny<-cor(Y[,1],Y[,2])
-plot(Y[,1],Y[,2])
+rho.yearend.ny<-cor(Y2[,1],Y2[,2])
+plot(Y2[,1],Y2[,2])
 
 #Why?
 par(mfrow=c(1,2))
 plot(cost.yearend$Cost[cost.yearend$ClaimType==1&cost.yearend$ClaimYear<10],
      cost.yearend$Cost[cost.yearend$ClaimType==2&cost.yearend$ClaimYear<10],
      main=paste("rho=",rho.yearend))
-plot(Y[,1],Y[,2],main=paste("rho=",rho.yearend.ny))
+plot(Y2[,1],Y2[,2],main=paste("rho=",rho.yearend.ny))
 
 
 ### Copulas

@@ -117,26 +117,46 @@ for all i.i.d. $Y_k$ in (\ref{eq:sum2}).
 \end{figure}
 
 With these assumptions we can 
+ create random samples of a yearly cost by
 
+First $\hat{N} <-  sum(rpois(lambdaw,winterdays)) +  sum(rpois(lambdas,summerdays))$
+which we use in
+
+then
+\begin{align} \label{eq:sum1}
+	\hat{X} <- rlnorm(\hat{N}_1,\mu log,\sigma log) 
+\end{align}
+and
+\begin{align} \label{eq:sum2}
+	 \hat{Y} <- rweibull(\hat{N}_2,\tau,c)
+\end{align}
+
+
+then we model total claim cost after one year by
+\begin{align} \label{eq:sum1}
+	\hat{S_1} = \sum_{k=1}^{\hat{N}_1} \hat{ X}_k   
+\end{align}
+and
+\begin{align} \label{eq:sum2}
+	 \hat{S_2} = \sum_{k=1}^{\hat{N}_2} \hat{Y}_k
+\end{align}
 
 
 \subsection*{Dependence}
+Before creating cumulative distribution, we check dependence between historical data
  Figure \ref{fig:samplefig4} showing dependence.
 
 
  \begin{figure}[H]
  \center
   \includegraphics[height=8cm, width=10cm]{rhototal.png}
-  \caption{Daily cost}
+  \caption{Daily cost 10Y}
   \label{fig:samplefig4}
 \end{figure}
 
 
 %%% CUMULATIVE
 \subsection*{Bivariate total claims cost}
-
-
- Figure \ref{fig:samplefig5} showing dependence.
 
 
  \begin{figure}[H]
