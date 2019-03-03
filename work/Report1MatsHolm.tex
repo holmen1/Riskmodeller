@@ -1,0 +1,275 @@
+\documentclass[11pt]{article}
+%\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\usepackage[a4paper,hmargin=3cm,vmargin=5cm]{geometry}
+%\geometry{a4paper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath}
+\usepackage{epstopdf}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\title{Report I - MT7027 Risk Models and Reserving in Non-Life Insurance}
+\author{Mats Holm nnnnnn-nnnn }
+\date{8 March, 2019}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+\section*{Project I}
+\subsection*{Objectives}
+({\it Instructions: highlight the project objectives})
+\\
+In this project we analyze claim
+arrival times and claim size distributions for two insurance products.
+We will model
+the distribution of the total claim cost for claim arrivals from today until one year from
+today in case of no reinsurance arrangement...
+
+\subsection*{Mathematical Background}
+({\it Instructions: provide a mathematical background by explaining the key concepts used in your analysis})
+
+%%% CLAIM ARRIVAL
+\subsection*{Claim arrival process}
+By labeling each ClaimDay between 1-365 and plot the histogram we see in Figure \ref{fig:samplefig1} we see that both ClaimTypes show a common decrease during 'summer'. This requires an inhomogenuos process. We chose
+
+\begin{align}\label{eq:N}
+	N_t  \sim  \mathrm{Pois}(\mu(t))
+\end{align}
+In \eqref{eq:N} we chose $\mu(t) = \lambda t$. With $\lambda$ for different claim types and season. Found with the help of R $fitdistr$-function.
+
+
+\begin{table}[!ht]
+\center
+\begin{tabular}{r|rr}
+Type & Winter & Summer \\ 
+\hline
+1 & $\lambda=$10.9 & $\lambda=$3.06 \\
+2 & $\lambda=$6.77 & $\lambda=$2.1\\
+\hline
+\end{tabular}
+\caption{Sample table. Use informative captions.} \label{tab:sampletab}
+\end{table}
+
+
+
+ \begin{figure}[!ht]
+ \center
+  \includegraphics[scale=.5]{histyear.png}
+  \caption{Summer slowdown}
+  \label{fig:samplefig1}
+\end{figure}
+
+
+%%% CLAIM COST
+\subsection*{Claim cost}
+First,  we see in Figure \ref{fig:samplefig2} we see that both ClaimTypes show no apparent seasonal variation.
+
+ClaimType 1 lognornam
+ClaimType 2 weibull
+ Figure \ref{fig:samplefig3} we see that both ClaimTypes show no apparent seasonal variation.
+
+
+ \begin{figure}[!ht]
+ \center
+  \includegraphics[scale=.5]{meancost.png}
+  \caption{Daily meancost}
+  \label{fig:samplefig2}
+\end{figure}
+
+ \begin{figure}[!ht]
+ \center
+  \includegraphics[scale=.5]{histfit.png}
+  \caption{Daily meancost}
+  \label{fig:samplefig3}
+\end{figure}
+
+\subsection*{Dependence}
+
+\subsection*{Bivariate total claims cost}
+
+\subsection*{XL covers}
+
+\subsection*{SL covers}
+
+\subsection*{SL cover}
+
+
+
+
+
+
+%
+%Formulas and equations without label:
+%\begin{align*}
+%	S_t = \sum_{k=1}^{N_t} X_k
+%\end{align*}
+%Formulas and equations with label:
+%\begin{align}\label{eq:N}
+%	N_t = \sum_{k=1}^{n} I_k
+%\end{align}
+%In \eqref{eq:N} we express $N_t$ in terms of $I_1,\dots,I_n$. The indicator variables are defined on page 16 in \cite{Wuthrich-Merz-13}.
+
+\subsubsection*{The empirical distribution}
+The empirical distribution of a sample $Z_1, \dots, Z_n$ of independent and identically distributed random variables or vectors is $\ldots$
+
+\subsubsection*{...other relevant topics...}
+
+
+\begin{table}[ht]
+\centering
+\centering
+\resizebox{\textwidth}{!}{\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ 
+  \hline
+1 & 4870651 & 4452874 & 5676422 & 5107004 & 4223729 & 5040483 & 2634183 & 4361924 & 3978609 & 3870894 \\ 
+  2 & 15576562 & 16840128 & 19954053 & 15510311 & 15370111 & 14731877 & 11313367 & 15313726 & 12655284 &  \\ 
+  3 & 23621698 & 25553209 & 29824826 & 24238656 & 23495224 & 22494885 & 16739575 & 23612486 &  &  \\ 
+  4 & 27584492 & 30278599 & 35025209 & 27951695 & 28442354 & 25756503 & 20461212 &  &  &  \\ 
+  5 & 29640139 & 32793613 & 38074008 & 30326269 & 31151976 & 27743509 &  &  &  &  \\ 
+  6 & 30904769 & 33823186 & 40163620 & 31553444 & 32428748 &  &  &  &  &  \\ 
+  7 & 31471720 & 34355699 & 40993337 & 32475334 &  &  &  &  &  &  \\ 
+  8 & 31767699 & 34674812 & 41422048 &  &  &  &  &  &  &  \\ 
+  9 & 31794628 & 35005933 &  &  &  &  &  &  &  &  \\ 
+  10 & 31822945 &  &  &  &  &  &  &  &  &  \\ 
+   \hline
+\end{tabular}}
+\end{table}
+
+
+\subsection*{Results}
+
+%({\it Explain your derivation of ... and display and comment on your simulation results, etc. Include tables and figures as needed and refer to them as follows. In Table \ref{tab:sampletab} we see an example of a sample table. In Figure \ref{fig:samplefig1} we see an example of sample graphics with a single plot, whereas in Figure \ref{fig:samplefig2} we see an example with two plots.}) 
+
+Formulas and equations without label:
+\begin{align*}
+	\hat{f_k} = \dfrac{\sum_{i=1}^{n-k} C_{i,k+1}} {\sum_{i=1}^{n-k} C_{i,k}}
+\end{align*}
+
+\begin{align*}
+	\hat{R_k} = C_{k,I+1-k} \left(  \hat{f}_{I+1-k} \cdots \hat{f}=_{I-1}-1\right)
+\end{align*}
+
+%\begin{align}\label{eq:N}
+%	\hat{\sigma}_k^2 = \dfrac{1}{I-n-1} \sum_{i=1}^{n-k} C_{i,k}\left( \dfrac{ C_{i,k+1}}{ C_{i,k}} -\hat{f_k} \right)^2
+%\end{align}
+%In \eqref{eq:N} we express $N_t$ in terms of $I_1,\dots,I_n$. The indicator variables are defined on page 16 in \cite{Wuthrich-Merz-13}.
+
+\begin{table}[!ht]
+\center
+\begin{tabular}{rr}
+	& Totals \\ 
+\hline
+IBNR: & 54,527,000 \\
+Mack S:E & 4,235,733\\
+\hline
+\end{tabular}
+\caption{Sample table. Use informative captions.} \label{tab:sampletab}
+\end{table}
+
+
+% \begin{figure}[!ht]
+% \center
+% % \includegraphics[scale=.5]{ExampleFig.eps}
+%  \caption{Sample graphics. Use informative captions}
+%  \label{fig:samplefig1}
+%\end{figure}
+
+
+ \begin{figure}[!ht]
+ \center
+  %\includegraphics[scale=.35]{ExampleFig.eps}  \includegraphics[scale=.35]{ExampleFig.eps}
+  \caption{\emph{Left:} Sample graphics 1. \emph{Right:} Sample graphics 2.}
+  \label{fig:samplefig2}
+\end{figure}
+
+
+\subsection*{Summary}
+({\it Summarize your results and state your conclusions. })
+
+
+
+\begin{thebibliography}{99}
+\bibitem{Dupire-94}
+B. Dupire (1994),
+Pricing with a smile.
+\emph{Risk}, 7, 18-20.
+\bibitem{Wuthrich-Merz-13}
+  Mario V. W\"{u}thrich and Michael Merz (2013),
+  \emph{Financial Modeling, Actuarial Valuation and Solvency in Insurance},
+  Springer-Verlag Berlin Heidelberg.
+\end{thebibliography}
+
+
+\section*{Appendix}
+
+\begin{verbatim}
+
+#library(ChainLadder)
+#library(xtable)
+
+
+claims <- read.table("Projekt2_Grupp8.txt", header = TRUE, sep = ";")
+summary(claims)
+head(claims, n=10)
+
+sub.2 <- subset(claims, is.element(ClaimType, 2), select=c(ClaimDay, PaymentDay, ClaimCost))
+
+sub.2$ClaimYear <- sub.2$ClaimDay %/% 366
+sub.2$PaymentYear <- sub.2$PaymentDay %/% 366
+
+sub.2.yearly <- aggregate(ClaimCost ~ ClaimYear + PaymentYear, data=sub.2, FUN=sum)
+sub.2.yearly$Development <- sub.2.yearly$PaymentYear - sub.2.yearly$ClaimYear
+
+#
+sub.2.yearly <- subset(sub.2.yearly, ClaimYear > 9)
+triangle.2 <- incr2cum(as.triangle(sub.2.yearly,
+                                   origin="ClaimYear",
+                                   dev="Development",
+                                   value="ClaimCost"), na.rm = FALSE)
+
+mack.2 <- MackChainLadder(triangle.2, est.sigma="Mack")
+mack.2
+mack.2$f
+mack.2$FullTriangle
+plot(mack.2)
+
+
+# Chainladder
+n <- 10
+f <- sapply(1:(n-1),
+               function(i){
+                 sum(triangle.2[c(1:(n-i)),i+1])/sum(triangle.2[c(1:(n-i)),i])
+               }
+)
+
+sigma <- sapply(1:(n-1),
+            function(i){
+              sum(triangle.2[c(1:(n-i)),i]*(triangle.2[c(1:(n-i)),i+1]/triangle.2[c(1:(n-i)),i] - f[i])^2)/(n-i-1)
+            }
+)
+
+
+
+# Ex 1.3
+
+n_val<-1000
+runs<-10000
+res_mat2<-matrix(0,runs,3)
+for(i in (1:runs))
+{
+	z_val<-rnorm(1)
+	z_vec<-rnorm(n_val)
+	res_mat2[i,1]<-sum(exp(z_vec))
+	res_mat2[i,3]<-sum(exp(0.1*z_val+sqrt(1-0.1^2)*z_vec))
+}
+
+par(mfrow=c(1,2))
+hist(res_mat2[,1],75,xlab="",ylab="",main="rho=0",xlim=c(min(res_mat2),max(res_mat2)),
+col="black")
+hist(res_mat2[,3],75,xlab="",ylab="",main="rho=0.1",xlim=c(min(res_mat2),max(res_mat2)),
+col="black")
+\end{verbatim}
+
+
+\end{document}  
