@@ -1,0 +1,16 @@
+## Risk och reserv Projekt 1
+
+library(MASS)
+
+
+load("C.RData")
+
+summary(S1)
+# Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+# 64835115 69340476 70366080 70330397 71315888 75126283 
+quantile(S1,0.5)
+# 50% 
+# 70366080
+
+
+

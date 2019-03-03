@@ -95,7 +95,7 @@ lines(dweibull(min(x2):max(x2),fit2[1],fit2[2]),lwd=3)
 months<-c(31,28,31,30,31,30,31,31,30,31,30,31)
 summer<-sum(months[5:8])
 winter<-sum(months[1:4])+sum(months[9:12])
-runs<-100000
+runs<-10000
 S<-matrix(0,runs,2)
 for (k in 1:runs)
 {

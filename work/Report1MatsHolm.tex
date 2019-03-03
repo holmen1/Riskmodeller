@@ -158,19 +158,17 @@ Before creating cumulative distribution, we check dependence between historical 
 %%% CUMULATIVE
 \subsection*{Bivariate total claims cost}
 With the help of R 
-First
+First create normar bivariate $Z_1,Z_2$.
 \begin{align} \label{eq:bi1}
 	 \begin{bmatrix} Z_1 \\ Z_2\end{bmatrix} \sim N\left(\begin{bmatrix} 0 \\ 0\end{bmatrix},\begin{bmatrix} 1&\rho \\ \rho&1\end{bmatrix}\right)
 \end{align}
-then pair
- 
-and since	   $\left(\Phi(Z_1),\Phi(Z_2)\right) \sim  U[0,1] \times U[0,1]$ .
-
+then from   $\left(\Phi(Z_1),\Phi(Z_2)\right) \sim  U[0,1] \times U[0,1]$ .
+With $\hat{F}_X^\leftharpoonup$ and $\hat{F}_Y^\leftharpoonup$ the inverse empirical cdf from $\hat{X}$ and $\hat{Y}$ respectively.
 We get
 \begin{align} \label{eq:bi3}
 	  \left(\tilde{S_1},\tilde{S_2}\right) = \left(\hat{F}_X^\leftharpoonup(\Phi(Z_1)),\hat{F}_Y^\leftharpoonup(\Phi(Z_2))\right) 
 \end{align}
-a Gaussian copula $ \left(\tilde{S_1},\tilde{S_2}\right)$, where $(\hat{F}_X^\leftharpoonup$ and $\hat{F}_Y^\leftharpoonup$ are inverse of empirical cdf from $\hat{X}$ and $\hat{Y}$ respectively.
+a Gaussian copula $ \left(\tilde{S_1},\tilde{S_2}\right)$!
 
  \begin{figure}[H]
  \center
