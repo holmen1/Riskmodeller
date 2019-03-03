@@ -25,6 +25,20 @@ We will model
 the distribution of the total claim cost for claim arrivals from today until one year from
 today in case of no reinsurance arrangement...
 
+\begin{align} \label{eq:sum1}
+	S_1 = \sum_{k=1}^{N_1}  X_k   
+\end{align}
+and
+\begin{align} \label{eq:sum2}
+	 S_2 = \sum_{k=1}^{N_2} Y_k
+\end{align}
+
+With cumulative distribution of $S = S_1 + S_2$ find
+\begin{align*}
+	  \mathrm{P}\left(S < s \right). 
+\end{align*}
+
+
 \subsection*{Mathematical Background}
 ({\it Instructions: provide a mathematical background by explaining the key concepts used in your analysis})
 
@@ -68,6 +82,26 @@ ClaimType 1 lognornam
 ClaimType 2 weibull
  Figure \ref{fig:samplefig3} we see that both ClaimTypes show no apparent seasonal variation.
 
+\begin{align}\label{eq:N}
+	f_{X}(x) = \dfrac{1}{\sqrt{2\pi}\sigma x} \exp\left(-\dfrac{(\log x - \mu)^2}{2\sigma^2}\right) , 
+\end{align}
+for all i.i.d. $X_k$ in (\ref{eq:sum1}).
+
+\begin{align}\label{eq:N}
+	f_{Y}(y) = c \tau y^{\tau - 1}e^{-cy^\tau} , 
+\end{align}
+for all i.i.d. $Y_k$ in (\ref{eq:sum2}).
+
+\begin{table}[!ht]
+\center
+\begin{tabular}{|r|rr|}
+\hline
+1 LogNorm & $\mu log=$10.08248 ,& $\sigma log=$0.3247564 \\
+2 Weibull & $\tau=$1.148278 ,& $c=$105523\\
+\hline
+\end{tabular}
+\caption{Sample table. Use informative captions.} \label{tab:cost}
+\end{table}
 
  \begin{figure}[!ht]
  \center
