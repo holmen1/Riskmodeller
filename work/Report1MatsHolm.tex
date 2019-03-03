@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{amssymb, amsmath}
 \usepackage{epstopdf}
+\usepackage{float}
 \DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
 
 \title{Report I - MT7027 Risk Models and Reserving in Non-Life Insurance}
@@ -64,9 +65,7 @@ Type & Winter & Summer \\
 \caption{Sample table. Use informative captions.} \label{tab:sampletab}
 \end{table}
 
-
-
- \begin{figure}[!ht]
+ \begin{figure}[H]
  \center
   \includegraphics[scale=.5]{histyear.png}
   \caption{Summer slowdown}
@@ -103,23 +102,49 @@ for all i.i.d. $Y_k$ in (\ref{eq:sum2}).
 \caption{Sample table. Use informative captions.} \label{tab:cost}
 \end{table}
 
- \begin{figure}[!ht]
+ \begin{figure}[H]
  \center
   \includegraphics[scale=.5]{meancost.png}
   \caption{Daily meancost}
   \label{fig:samplefig2}
 \end{figure}
 
- \begin{figure}[!ht]
+ \begin{figure}[H]
  \center
   \includegraphics[scale=.5]{histfit.png}
   \caption{Daily meancost}
   \label{fig:samplefig3}
 \end{figure}
 
-\subsection*{Dependence}
+With these assumptions we can 
 
+
+
+\subsection*{Dependence}
+ Figure \ref{fig:samplefig4} showing dependence.
+
+
+ \begin{figure}[H]
+ \center
+  \includegraphics[height=8cm, width=10cm]{rhototal.png}
+  \caption{Daily cost}
+  \label{fig:samplefig4}
+\end{figure}
+
+
+%%% CUMULATIVE
 \subsection*{Bivariate total claims cost}
+
+
+ Figure \ref{fig:samplefig5} showing dependence.
+
+
+ \begin{figure}[H]
+ \center
+  \includegraphics[scale=.5]{pairs.png}
+  \caption{Gauss Copula}
+  \label{fig:samplefig5}
+\end{figure}
 
 \subsection*{XL covers}
 
@@ -149,31 +174,12 @@ The empirical distribution of a sample $Z_1, \dots, Z_n$ of independent and iden
 \subsubsection*{...other relevant topics...}
 
 
-\begin{table}[ht]
-\centering
-\centering
-\resizebox{\textwidth}{!}{\begin{tabular}{rrrrrrrrrrr}
-  \hline
- & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ 
-  \hline
-1 & 4870651 & 4452874 & 5676422 & 5107004 & 4223729 & 5040483 & 2634183 & 4361924 & 3978609 & 3870894 \\ 
-  2 & 15576562 & 16840128 & 19954053 & 15510311 & 15370111 & 14731877 & 11313367 & 15313726 & 12655284 &  \\ 
-  3 & 23621698 & 25553209 & 29824826 & 24238656 & 23495224 & 22494885 & 16739575 & 23612486 &  &  \\ 
-  4 & 27584492 & 30278599 & 35025209 & 27951695 & 28442354 & 25756503 & 20461212 &  &  &  \\ 
-  5 & 29640139 & 32793613 & 38074008 & 30326269 & 31151976 & 27743509 &  &  &  &  \\ 
-  6 & 30904769 & 33823186 & 40163620 & 31553444 & 32428748 &  &  &  &  &  \\ 
-  7 & 31471720 & 34355699 & 40993337 & 32475334 &  &  &  &  &  &  \\ 
-  8 & 31767699 & 34674812 & 41422048 &  &  &  &  &  &  &  \\ 
-  9 & 31794628 & 35005933 &  &  &  &  &  &  &  &  \\ 
-  10 & 31822945 &  &  &  &  &  &  &  &  &  \\ 
-   \hline
-\end{tabular}}
-\end{table}
+
 
 
 \subsection*{Results}
 
-%({\it Explain your derivation of ... and display and comment on your simulation results, etc. Include tables and figures as needed and refer to them as follows. In Table \ref{tab:sampletab} we see an example of a sample table. In Figure \ref{fig:samplefig1} we see an example of sample graphics with a single plot, whereas in Figure \ref{fig:samplefig2} we see an example with two plots.}) 
+
 
 Formulas and equations without label:
 \begin{align*}
@@ -201,21 +207,6 @@ Mack S:E & 4,235,733\\
 \caption{Sample table. Use informative captions.} \label{tab:sampletab}
 \end{table}
 
-
-% \begin{figure}[!ht]
-% \center
-% % \includegraphics[scale=.5]{ExampleFig.eps}
-%  \caption{Sample graphics. Use informative captions}
-%  \label{fig:samplefig1}
-%\end{figure}
-
-
- \begin{figure}[!ht]
- \center
-  %\includegraphics[scale=.35]{ExampleFig.eps}  \includegraphics[scale=.35]{ExampleFig.eps}
-  \caption{\emph{Left:} Sample graphics 1. \emph{Right:} Sample graphics 2.}
-  \label{fig:samplefig2}
-\end{figure}
 
 
 \subsection*{Summary}
