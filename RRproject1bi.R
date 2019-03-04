@@ -83,7 +83,7 @@ load("S.RData")
 #head(S,n=20)
 
 
-n <- 1000
+n <- 100000
 #rho<-0.5
 # Create bivariate N[0,1]xN[0,1] w correlation rho
 sigma <- matrix(c(1.0,  rho.total,

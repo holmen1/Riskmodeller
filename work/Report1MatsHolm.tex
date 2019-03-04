@@ -123,13 +123,13 @@ First $\hat{N} <-  sum(rpois(lambdaw,winterdays)) +  sum(rpois(lambdas,summerday
 which we use in
 
 then
-\begin{align} \label{eq:sum1}
+\begin{align*} 
 	\hat{X} <- rlnorm(\hat{N}_1,\mu log,\sigma log) 
-\end{align}
+\end{align*}
 and
-\begin{align} \label{eq:sum2}
+\begin{align*} 
 	 \hat{Y} <- rweibull(\hat{N}_2,\tau,c)
-\end{align}
+\end{align*}
 
 
 then we model total claim cost after one year by
@@ -163,7 +163,7 @@ First create normar bivariate $Z_1,Z_2$.
 	 \begin{bmatrix} Z_1 \\ Z_2\end{bmatrix} \sim N\left(\begin{bmatrix} 0 \\ 0\end{bmatrix},\begin{bmatrix} 1&\rho \\ \rho&1\end{bmatrix}\right)
 \end{align}
 then from   $\left(\Phi(Z_1),\Phi(Z_2)\right) \sim  U[0,1] \times U[0,1]$ .
-With $\hat{F}_X^\leftharpoonup$ and $\hat{F}_Y^\leftharpoonup$ the inverse empirical cdf from $\hat{X}$ and $\hat{Y}$ respectively.
+With $\hat{F}_1^\leftharpoonup$ and $\hat{F}_2^\leftharpoonup$ the inverse empirical cdf from $\hat{S_1}$ and $\hat{S_2}$ respectively.
 We get
 \begin{align} \label{eq:bi3}
 	  \left(\tilde{S_1},\tilde{S_2}\right) = \left(\hat{F}_X^\leftharpoonup(\Phi(Z_1)),\hat{F}_Y^\leftharpoonup(\Phi(Z_2))\right) 
@@ -181,9 +181,16 @@ a Gaussian copula $ \left(\tilde{S_1},\tilde{S_2}\right)$!
 
 \subsection*{SL covers}
 
+%%% STOPLOSS
 \subsection*{SL cover}
 
+\begin{align*} 
+	tilde{S}= tilde{S_1} + \tilde{S_2}
+\end{align*}
 
+\begin{align*} 
+	K = \hat{F}_{12}^\leftharpoonup(0.9)
+\end{align*}
 
 
 

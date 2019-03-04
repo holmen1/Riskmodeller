@@ -11,6 +11,11 @@ summary(S1)
 quantile(S1,0.5)
 # 50% 
 # 70366080
+quantile(S1,c(0.1,0.5,0.9))
+v <- (1:100)/100
+plot(v,quantile(S1,v))
 
+
+hist(S1+S2,100)
 
 
