@@ -1,4 +1,5 @@
 ## Risk och reserv Projekt 1
+library(psych)
 
 claims <- read.table("Projekt1_Grupp8.txt", header = TRUE, sep = ";")
 
@@ -9,56 +10,30 @@ CommonDays<-intersect(claims$ClaimDay[claims$ClaimType==1],
 cost.daily <- aggregate(list(ClaimCost=claims$ClaimCost),list(ClaimDay=claims$ClaimDay, ClaimType=claims$ClaimType), sum)
 
 #Kontroll korrelation
-Y<-matrix(0,length(CommonDays),2)
-for (k in 1:length(s1$ClaimDay))
+D <- matrix(0,length(CommonDays),2)
+for (k in 1:length(CommonDays))
 {
-  Y[k,1]<-claims.daily$Cost[claims.daily$ClaimDay==CommonDays[k] & claims.daily$ClaimType==1]
-  Y[k,2]<-claims.daily$Cost[claims.daily$ClaimDay==CommonDays[k] & claims.daily$ClaimType==2]
+  D[k,1]<-cost.daily$ClaimCost[cost.daily$ClaimDay==CommonDays[k] & cost.daily$ClaimType==1]
+  D[k,2]<-cost.daily$ClaimCost[cost.daily$ClaimDay==CommonDays[k] & cost.daily$ClaimType==2]
 }
-rho.total<-cor(Y[,1],Y[,2]) #= 0.2771018
-plot(Y[,1],Y[,2],main=paste("rho=",rho.total))
+rho.daily<-cor(D[,1],D[,2]) #= 0.2771018
+plot(D[,1],D[,2],main=paste("rho.daily=",rho.daily))
 
-# # Kontroll
-# sum(cost.year$Cost[cost.year$ClaimType==1])
-# sum(cost.year$Cost[cost.year$ClaimType==2])
-# sum(claims.daily$Cost[claims.daily$ClaimType==1])
-# sum(claims.daily$Cost[claims.daily$ClaimType==2])
-
-
-# plot(cost.common$Cost[cost.common$ClaimType==1],
-#      cost.common$Cost[cost.common$ClaimType==2],
-#      main=paste("rho=",rho.common))
 
 # Yearly claim cost
-cost.common$Year<-cost.common$ClaimDay %/% 365
-#head(cost.common,n=2000)
-cost.yearend<-aggregate(list(Cost=cost.common$Cost),list(ClaimYear=cost.common$Year, ClaimType=cost.common$ClaimType), sum)
+claims.yearly <- claims
+claims.yearly$ClaimYear <- (claims.yearly$ClaimDay %/% 365) + 1
 
-rho.yearend<-cor(cost.yearend$Cost[cost.yearend$ClaimType==1&cost.yearend$ClaimYear<10],
-    cost.yearend$Cost[cost.yearend$ClaimType==2&cost.yearend$ClaimYear<10])
-plot(cost.yearend$Cost[cost.yearend$ClaimType==1&cost.yearend$ClaimYear<10],
-     cost.yearend$Cost[cost.yearend$ClaimType==2&cost.yearend$ClaimYear<10],
-     main=paste("rho=",rho.yearend))
+cost.yearly <- aggregate(list(ClaimCost=claims.yearly$ClaimCost),list(ClaimYear=claims.yearly$ClaimYear, ClaimType=claims.yearly$ClaimType), sum)
 
-#Omkontroll korrelation
-s1<-subset(cost.yearend, cost.yearend$ClaimType==1,select=c(ClaimYear,Cost))
-s2<-subset(cost.yearend, cost.yearend$ClaimType==2,select=c(ClaimYear,Cost))
-Y2<-matrix(0,9,2)
-for (k in 1:9)
+Y <- matrix(0,10,2)
+for (k in 1:10)
 {
-  Y2[k,1]<-s1$Cost[s1$ClaimYear==k]
-  Y2[k,2]<-s2$Cost[s2$ClaimYear==k]
+  Y[k,1] <- cost.yearly$ClaimCost[cost.yearly$ClaimYear==k & cost.yearly$ClaimType==1]
+  Y[k,2] <- cost.yearly$ClaimCost[cost.yearly$ClaimYear==k & cost.yearly$ClaimType==2]
 }
-#plot(Y[,1],Y[,2])
-rho.yearend.ny<-cor(Y2[,1],Y2[,2])
-plot(Y2[,1],Y2[,2])
-
-#Why?
-par(mfrow=c(1,2))
-plot(cost.yearend$Cost[cost.yearend$ClaimType==1&cost.yearend$ClaimYear<10],
-     cost.yearend$Cost[cost.yearend$ClaimType==2&cost.yearend$ClaimYear<10],
-     main=paste("rho=",rho.yearend))
-plot(Y2[,1],Y2[,2],main=paste("rho=",rho.yearend.ny))
+rho.yearly<-cor(Y[,1],Y[,2]) #= 0.497026
+plot(Y[,1],Y[,2],main=paste("rho.yearly=",rho.yearly))
 
 
 ### Copulas
@@ -73,8 +48,8 @@ load("S.RData")
 n <- 100000
 #rho<-0.5
 # Create bivariate N[0,1]xN[0,1] w correlation rho
-sigma <- matrix(c(1.0,  rho.total,
-                  rho.total,  1.0), nrow=2)
+sigma <- matrix(c(1.0,  rho.yearly,
+                  rho.yearly,  1.0), nrow=2)
 x <- mvrnorm(n, mu=rep(0, 2), Sigma=sigma, empirical=TRUE)
 
 # Transform to U[0,1]xU[0,1] u=F(x)
