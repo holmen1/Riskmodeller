@@ -22,7 +22,7 @@ plot(D[,1],D[,2],main=paste("rho.daily=",rho.daily))
 
 # Yearly claim cost
 claims.yearly <- claims
-claims.yearly$ClaimYear <- (claims.yearly$ClaimDay %/% 365) + 1
+claims.yearly$ClaimYear <- (claims.yearly$ClaimDay %/% 366) + 1
 
 cost.yearly <- aggregate(list(ClaimCost=claims.yearly$ClaimCost),list(ClaimYear=claims.yearly$ClaimYear, ClaimType=claims.yearly$ClaimType), sum)
 
@@ -32,7 +32,7 @@ for (k in 1:10)
   Y[k,1] <- cost.yearly$ClaimCost[cost.yearly$ClaimYear==k & cost.yearly$ClaimType==1]
   Y[k,2] <- cost.yearly$ClaimCost[cost.yearly$ClaimYear==k & cost.yearly$ClaimType==2]
 }
-rho.yearly<-cor(Y[,1],Y[,2]) #= 0.497026
+rho.yearly<-cor(Y[,1],Y[,2]) #= 0.4308468
 plot(Y[,1],Y[,2],main=paste("rho.yearly=",rho.yearly))
 
 
