@@ -1,32 +1,21 @@
 ## Risk och reserv Projekt 1
 
-library(MASS)
-library(psych)
-
-load("fitted.RData")
-# head(claims.daily,n=20)
-# length(claims.daily$Cost[claims.daily$ClaimType==1])
-# length(claims.daily$Cost[claims.daily$ClaimType==2])
+claims <- read.table("Projekt1_Grupp8.txt", header = TRUE, sep = ";")
 
 # Olika värdedagar claim1 ? claim2 = inner join
-CommonDays<-intersect(claims.daily$ClaimDay[claims.daily$ClaimType==1],
-                      claims.daily$ClaimDay[claims.daily$ClaimType==2])
-cost.common <- subset(claims.daily, claims.daily$ClaimDay %in% CommonDays, 
-                  select=c(ClaimDay,ClaimDay365, ClaimType, Cost))
-cost.year<-aggregate(list(Cost=cost.common$Cost),list(ClaimDay365=cost.common$ClaimDay365, ClaimType=cost.common$ClaimType), sum)
+CommonDays<-intersect(claims$ClaimDay[claims$ClaimType==1],
+                      claims$ClaimDay[claims$ClaimType==2])
 
+cost.daily <- aggregate(list(ClaimCost=claims$ClaimCost),list(ClaimDay=claims$ClaimDay, ClaimType=claims$ClaimType), sum)
 
-
-
-#Omkontroll korrelation
+#Kontroll korrelation
 Y<-matrix(0,length(CommonDays),2)
 for (k in 1:length(s1$ClaimDay))
 {
-  Y[i,1]<-claims.daily$Cost[claims.daily$ClaimDay==CommonDays[k] & claims.daily$ClaimType==1]
-  Y[i,2]<-claims.daily$Cost[claims.daily$ClaimDay==CommonDays[k] & claims.daily$ClaimType==2]
-  i=i+1
+  Y[k,1]<-claims.daily$Cost[claims.daily$ClaimDay==CommonDays[k] & claims.daily$ClaimType==1]
+  Y[k,2]<-claims.daily$Cost[claims.daily$ClaimDay==CommonDays[k] & claims.daily$ClaimType==2]
 }
-rho.total<-cor(Y[,1],Y[,2]) #= 0.5277435
+rho.total<-cor(Y[,1],Y[,2]) #= 0.2771018
 plot(Y[,1],Y[,2],main=paste("rho=",rho.total))
 
 # # Kontroll

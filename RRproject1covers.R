@@ -1,8 +1,6 @@
 ## Risk och reserv Projekt 1
 
-library(MASS)
-
-
+#library(MASS)
 load("C.RData")
 
 summary(S1)
@@ -19,3 +17,12 @@ plot(v,quantile(S1,v))
 hist(S1+S2,100)
 
 
+
+plot(v,quantile(S1+S2,v))
+
+# SL-cover single
+summary(S1+S2)
+K <- quantile(S1+S2,0.9)
+
+Rsl <- max(0,S1+S2-K)
+price <- 1.1*mean(Rsl)

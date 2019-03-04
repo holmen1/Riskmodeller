@@ -157,6 +157,16 @@ Before creating cumulative distribution, we check dependence between historical 
 
 %%% CUMULATIVE
 \subsection*{Bivariate total claims cost}
+
+%% Bootstrap
+\subsubsection*{Bootstrap}
+
+
+
+
+
+%% Copula
+\subsubsection*{Copula}
 With the help of R 
 First create normar bivariate $Z_1,Z_2$.
 \begin{align} \label{eq:bi1}
@@ -183,16 +193,22 @@ a Gaussian copula $ \left(\tilde{S_1},\tilde{S_2}\right)$!
 
 %%% STOPLOSS
 \subsection*{SL cover}
-
+Let
 \begin{align*} 
 	tilde{S}= tilde{S_1} + \tilde{S_2}
 \end{align*}
+model total cost.
 
+Then, with ... we find the 10\%-quantile
 \begin{align*} 
 	K = \hat{F}_{12}^\leftharpoonup(0.9)
 \end{align*}
+where $\hat{F}_{12}^\leftharpoonup$ is the inverse empirical cdf for $\tilde{S}$  formed from copula $(\tilde{S_1}, \tilde{S_2})$.
 
-
+\begin{align} \label{eqsl1}
+	R_{SL} = \dfrac{1}{N}\sum_{n=1}^N\left(	 \tilde{S}_n-K\right)_+        
+\end{align}
+and then price $\pi = 1.1R_{SL} = 18507884$.
 
 \subsection*{Summary}
 ({\it Summarize your results and state your conclusions. })
