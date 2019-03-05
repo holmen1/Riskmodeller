@@ -1,7 +1,7 @@
 ## Risk och reserv Projekt 2
 
-#library(ChainLadder)
-#library(xtable)
+library(ChainLadder)
+library(xtable)
 
 
 claims <- read.table("Projekt2_Grupp8.txt", header = TRUE, sep = ";")
@@ -10,14 +10,14 @@ head(claims, n=10)
 
 sub.2 <- subset(claims, is.element(ClaimType, 2), select=c(ClaimDay, PaymentDay, ClaimCost))
 
-sub.2$ClaimYear <- sub.2$ClaimDay %/% 366
-sub.2$PaymentYear <- sub.2$PaymentDay %/% 366
+sub.2$ClaimYear <- sub.2$ClaimDay %/% 366 + 1
+sub.2$PaymentYear <- sub.2$PaymentDay %/% 366 + 1
 
 sub.2.yearly <- aggregate(ClaimCost ~ ClaimYear + PaymentYear, data=sub.2, FUN=sum)
 sub.2.yearly$Development <- sub.2.yearly$PaymentYear - sub.2.yearly$ClaimYear
 
-#
-s.2.yearly <- subset(sub.2.yearly, ClaimYear > 9)
+# Last 10 years
+s.2.yearly <- subset(sub.2.yearly, ClaimYear > 10 & Development < 10)
 T.2 <- incr2cum(as.triangle(s.2.yearly,
                                    origin="ClaimYear",
                                    dev="Development",
@@ -37,15 +37,13 @@ sigma <- sapply(1:(n-1),
             }
 )
 
-
-
-
-
 mack.2 <- MackChainLadder(T.2, est.sigma="Mack")
 mack.2
 mack.2$f
 mack.2$FullTriangle
 plot(mack.2)
+
+xtable(matrix(mack.2$FullTriangle,nrow=10,ncol=10))
 
 
 #4 First 10 years
