@@ -1,11 +1,12 @@
 \documentclass[a4paper]{article}
 \usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
 \geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
-\geometry{landscape}                % Activate for for rotated page geometry
+%\geometry{landscape}                % Activate for for rotated page geometry
 %\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
 \usepackage{graphicx}
 \usepackage{amssymb, amsmath}
 \usepackage{epstopdf}
+\usepackage{float}
 \DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
 
 \title{Report II - MT7027 Risk Models and Reserving in Non-Life Insurance}
@@ -21,32 +22,14 @@
 In this project we analyze claim
 arrival times and claim size distributions for two insurance products.
 
-\subsection*{Mathematical Background}
-({\it Instructions: provide a mathematical background by explaining the key concepts used in your analysis})
-
-Formulas and equations without label:
-\begin{align*}
-	S_t = \sum_{k=1}^{N_t} X_k
-\end{align*}
-Formulas and equations with label:
-\begin{align}\label{eq:N}
-	N_t = \sum_{k=1}^{n} I_k
-\end{align}
-In \eqref{eq:N} we express $N_t$ in terms of $I_1,\dots,I_n$. The indicator variables are defined on page 16 in \cite{Wuthrich-Merz-13}.
-
-\subsubsection*{The empirical distribution}
-The empirical distribution of a sample $Z_1, \dots, Z_n$ of independent and identically distributed random variables or vectors is $\ldots$
 
 \subsubsection*{Chain ladder reserve}
 
-
-
 \begin{table}[ht]
 \centering
-\begin{tabular}{rrrrrrrrrrr}
-
+\resizebox{\textwidth}{!}{\begin{tabular}{rrrrrrrrrrr}
+  & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ 
   \hline
-origin    & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ 
        11 &4870651& 15576562& 23621698& 27584492& 29640139& 30904769& 31471720& 31767699 &31794628 &31822945\\
        12& 4452874 &16840128 &25553209& 30278599& 32793613 &33823186 &34355699& 34674812& 35005933  &     NA\\
        13& 5676422& 19954053& 29824826& 35025209& 38074008& 40163620& 40993337& 41422048 &      NA    &   NA\\
@@ -58,8 +41,30 @@ origin    & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
        19& 3978609& 12655284  &     NA &      NA   &    NA  &     NA  &     NA   &    NA   &    NA &      NA\\
        20 &3870894     &  NA    &   NA  &     NA &      NA &      NA    &   NA  &     NA  &     NA   &    NA\\
    \hline
-\end{tabular}
+\end{tabular}}
 \end{table}
+
+
+\begin{table}[ht]
+\centering
+\resizebox{\textwidth}{!}{\begin{tabular}{rrrrrrrrrrr}
+ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ 
+  \hline
+11&4870651&15576562&23621698&27584492&29640139&30904769&31471720&31767699&31794628&31822945\\
+12&4452874&16840128&25553209&30278599&32793613&33823186&34355699&34674812&35005933&35037110\\
+13&5676422&19954053&29824826&35025209&38074008&40163620&40993337&41422048&41645266&41682356\\
+14&5107004&15510311&24238656&27951695&30326269&31553444&32475334&32792668&32969383&32998747\\
+15&4223729&15370111&23495224&28442354&31151976&32428748&33106359&33429859&33610008&33639942\\
+16&5040483&14731877&22494885&25756503&27743509&28923183&29527544&29816074&29976748&30003446\\
+17&2634183&11313367&16739575&20461212&22178481&23121526&23604659&23835313&23963758&23985101\\
+18&4361924&15313726&23612486&27814039&30148416&31430349&32087098&32400638&32575241&32604253\\
+19&3978609&12655284&19253617&22679563&24583013&25628301&26163814&26419475&26561846&26585502\\
+20&3870894&13169620&20036122&23601305&25582116&26669886&27227163&27493215&27641372&27665990\\
+   \hline
+\end{tabular}}
+\end{table}
+
+
 
 
 
@@ -82,6 +87,52 @@ origin    & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
 \end{tabular}
 \end{table}
 
+\begin{table}[ht]
+\centering
+\begin{tabular}{rr}
+     
+  \hline
+&                  Totals\\
+\hline
+Latest:  & 261,498,393.00\\
+Dev:        &        0.83\\
+Ultimate: &316,025,392.83\\
+IBNR:  &    54,526,999.83\\
+Mack.S.E&    4,235,733.32\\
+CV(IBNR): &          0.08\\
+   \hline
+\end{tabular}
+\end{table}
+
+ in Figure \ref{fig:ultimate} w
+
+ \begin{figure}[H]
+ \center
+  \includegraphics[scale=.5]{uclaims.png}
+  \caption{Ultimate claims}
+  \label{fig:ultimate}
+\end{figure}
+
+ \begin{figure}[H]
+ \center
+  \includegraphics[scale=.5]{devperiod.png}
+  \caption{Ultimate claims}
+  \label{fig:dev}
+\end{figure}
+
+ \begin{figure}[H]
+ \center
+  \includegraphics[scale=.5]{plotmack.png}
+  \caption{Ultimate claims}
+  \label{fig:mack}
+\end{figure}
+
+ \begin{figure}[H]
+ \center
+  \includegraphics[scale=.5]{uclaims.png}
+  \caption{Ultimate claims}
+  \label{fig:ultimate}
+\end{figure}
 \subsection*{Results}
 
 ({\it Explain your derivation of ... and display and comment on your simulation results, etc. Include tables and figures as needed and refer to them as follows. In Table \ref{tab:sampletab} we see an example of a sample table. In Figure \ref{fig:samplefig1} we see an example of sample graphics with a single plot, whereas in Figure \ref{fig:samplefig2} we see an example with two plots.}) 
@@ -113,107 +164,93 @@ Mack S:E & 4,235,733\\
 \end{table}
 
 
- \begin{figure}[!ht]
- \center
- % \includegraphics[scale=.5]{ExampleFig.eps}
-  \caption{Sample graphics. Use informative captions}
-  \label{fig:samplefig1}
-\end{figure}
-
-
- \begin{figure}[!ht]
- \center
-  %\includegraphics[scale=.35]{ExampleFig.eps}  \includegraphics[scale=.35]{ExampleFig.eps}
-  \caption{\emph{Left:} Sample graphics 1. \emph{Right:} Sample graphics 2.}
-  \label{fig:samplefig2}
-\end{figure}
-
 
 \subsection*{Summary}
 ({\it Summarize your results and state your conclusions. })
 
 
 
-\begin{thebibliography}{99}
-\bibitem{Dupire-94}
-B. Dupire (1994),
-Pricing with a smile.
-\emph{Risk}, 7, 18-20.
-\bibitem{Wuthrich-Merz-13}
-  Mario V. W\"{u}thrich and Michael Merz (2013),
-  \emph{Financial Modeling, Actuarial Valuation and Solvency in Insurance},
-  Springer-Verlag Berlin Heidelberg.
-\end{thebibliography}
 
 
 \section*{Appendix}
 
 \begin{verbatim}
 
-#library(ChainLadder)
-#library(xtable)
+## Risk och reserv Projekt 2
+
+library(ChainLadder)
+library(xtable)
 
 
 claims <- read.table("Projekt2_Grupp8.txt", header = TRUE, sep = ";")
 summary(claims)
 head(claims, n=10)
 
-sub.2 <- subset(claims, is.element(ClaimType, 2), select=c(ClaimDay, PaymentDay, ClaimCost))
+sub.2 <- subset(claims, is.element(ClaimType, 2),
+                select=c(ClaimDay, PaymentDay, ClaimCost))
 
-sub.2$ClaimYear <- sub.2$ClaimDay %/% 366
-sub.2$PaymentYear <- sub.2$PaymentDay %/% 366
+sub.2$ClaimYear <- sub.2$ClaimDay %/% 366 + 1
+sub.2$PaymentYear <- sub.2$PaymentDay %/% 366 + 1
 
-sub.2.yearly <- aggregate(ClaimCost ~ ClaimYear + PaymentYear, data=sub.2, FUN=sum)
-sub.2.yearly$Development <- sub.2.yearly$PaymentYear - sub.2.yearly$ClaimYear
+sub.2.yearly <- 
+  aggregate(ClaimCost ~ ClaimYear + PaymentYear, data=sub.2, FUN=sum)
+sub.2.yearly$Development <-
+  sub.2.yearly$PaymentYear - sub.2.yearly$ClaimYear
 
-#
-sub.2.yearly <- subset(sub.2.yearly, ClaimYear > 9)
-triangle.2 <- incr2cum(as.triangle(sub.2.yearly,
+# Last 10 years
+s.2.yearly <- subset(sub.2.yearly, ClaimYear > 10 & Development < 10)
+T.2 <- incr2cum(as.triangle(s.2.yearly,
                                    origin="ClaimYear",
                                    dev="Development",
                                    value="ClaimCost"), na.rm = FALSE)
 
-mack.2 <- MackChainLadder(triangle.2, est.sigma="Mack")
+# Chainladder
+n <- 10
+f <- sapply(1:(n-1),
+               function(i){
+                 sum(T.2[c(1:(n-i)),i+1])/sum(T.2[c(1:(n-i)),i])
+               }
+)
+
+sigma.sq <- sapply(1:(n-1),
+            function(i){
+              sum(T.2[c(1:(n-i)),i]*(T.2[c(1:(n-i)),i+1]/T.2[c(1:(n-i)),i] - f[i])^2)/(n-i-1)
+            }
+)
+
+# Lazy way
+mack.2 <- MackChainLadder(T.2, est.sigma="Mack")
 mack.2
 mack.2$f
 mack.2$FullTriangle
 plot(mack.2)
 
 
-# Chainladder
-n <- 10
-f <- sapply(1:(n-1),
-               function(i){
-                 sum(triangle.2[c(1:(n-i)),i+1])/sum(triangle.2[c(1:(n-i)),i])
-               }
-)
+#First 10 years
+s.22.yearly <- subset(sub.2.yearly, ClaimYear < 11 & Development < 10)
+T.22 <- incr2cum(as.triangle(s.22.yearly,
+                                   origin="ClaimYear",
+                                   dev="Development",
+                                   value="ClaimCost"), na.rm = FALSE)
 
-sigma <- sapply(1:(n-1),
-            function(i){
-              sum(triangle.2[c(1:(n-i)),i]*(triangle.2[c(1:(n-i)),i+1]/triangle.2[c(1:(n-i)),i] - f[i])^2)/(n-i-1)
-            }
-)
-
-
-
-# Ex 1.3
-
-n_val<-1000
-runs<-10000
-res_mat2<-matrix(0,runs,3)
-for(i in (1:runs))
+ultimate.claims <- rep(0, 9)
+U0 <- matrix(T.22,nrow=10,ncol=10)
+for (i in 2:10)
 {
-	z_val<-rnorm(1)
-	z_vec<-rnorm(n_val)
-	res_mat2[i,1]<-sum(exp(z_vec))
-	res_mat2[i,3]<-sum(exp(0.1*z_val+sqrt(1-0.1^2)*z_vec))
+  tt <-2
+  U <- U0
+  for (r in i:10)
+  {
+    # Upper (left) triangle
+    U[r,(10+i-r):10] <- NA
+  }
+  m <- MackChainLadder(as.triangle(U), est.sigma="Mack")
+  ultimate.claims[i-1] <- m$FullTriangle[10,10]
 }
 
-par(mfrow=c(1,2))
-hist(res_mat2[,1],75,xlab="",ylab="",main="rho=0",xlim=c(min(res_mat2),max(res_mat2)),
-col="black")
-hist(res_mat2[,3],75,xlab="",ylab="",main="rho=0.1",xlim=c(min(res_mat2),max(res_mat2)),
-col="black")
+t <- 1:9
+plot(t,ultimate.claims)
+lines(t,rep(U0[10,10],9))
 \end{verbatim}
 
 
