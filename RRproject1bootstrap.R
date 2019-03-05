@@ -30,7 +30,8 @@ cost.monthly<-aggregate(list(ClaimCost=claims.daily$ClaimCost),
 rho.ws <- cor(cost.monthly$ClaimCost[cost.monthly$ClaimType==1],
               cost.monthly$ClaimCost[cost.monthly$ClaimType==2])
 plot(cost.monthly$ClaimCost[cost.monthly$ClaimType==1],
-     cost.monthly$ClaimCost[cost.monthly$ClaimType==2],main=paste("rho=",rho.ws))
+     cost.monthly$ClaimCost[cost.monthly$ClaimType==2],
+     main=paste("rho=",rho.ws))
 
 
 year <- unique(cost.monthly$ClaimYear)
@@ -39,11 +40,11 @@ month <- unique(cost.monthly$ClaimMonth)
 
 tmp<-unique(cost.monthly[c("ClaimYear","ClaimMonth")])
 tmp$Cost1 <- cost.monthly$ClaimCost[tmp$ClaimYear==cost.monthly$ClaimYear &
-                                      tmp$ClaimMonth==cost.monthly$ClaimMonth &
-                                      cost.monthly$ClaimType == 1]
+                                    tmp$ClaimMonth==cost.monthly$ClaimMonth &
+                                    cost.monthly$ClaimType == 1]
 tmp$Cost2 <- cost.monthly$ClaimCost[tmp$ClaimYear==cost.monthly$ClaimYear &
-                                      tmp$ClaimMonth==cost.monthly$ClaimMonth &
-                                      cost.monthly$ClaimType == 2]
+                                    tmp$ClaimMonth==cost.monthly$ClaimMonth &
+                                    cost.monthly$ClaimType == 2]
 
 winter.months<-c(1,2,3,4,9,10,11,12)
 summer.months<-c(5,6,7)

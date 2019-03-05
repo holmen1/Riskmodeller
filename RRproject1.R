@@ -6,8 +6,11 @@ claims <- read.table("Projekt1_Grupp8.txt", header = TRUE, sep = ";")
 summary(claims)
 head(claims, n=10)
 
-arrivals.daily <- aggregate(list(Arrivals=claims$ClaimDay),list(ClaimDay=claims$ClaimDay, ClaimType=claims$ClaimType), length)
-cost.daily <- aggregate(list(Cost=claims$ClaimCost),list(ClaimDay=claims$ClaimDay, ClaimType=claims$ClaimType), sum)
+arrivals.daily <- aggregate(list(Arrivals=claims$ClaimDay),
+                            list(ClaimDay=claims$ClaimDay, ClaimType=claims$ClaimType),
+                            length)
+cost.daily <- aggregate(list(Cost=claims$ClaimCost),
+                        list(ClaimDay=claims$ClaimDay, ClaimType=claims$ClaimType), sum)
 
 claims.daily<-merge(arrivals.daily,cost.daily)
 
@@ -16,19 +19,7 @@ claims.365<-subset(claims, select=c("ClaimType","ClaimDay"))
 claims.365$ClaimDay365 <- claims.365$ClaimDay %% 365
 claims.365$ClaimDay365[claims.365$ClaimDay365==0] <- 365
 
-
-
-## Kontroll
-#sum(claims$ClaimCost)
-#sum(claims.daily$Cost)
-#sum(claims.daily$Arrivals)
-#summary(claims)
-#summary(claims.daily)
-#head(claims.daily, n=30)
-
 claims.daily$MeanCost<-claims.daily$Cost/claims.daily$Arrivals
-#head(claims.daily, n=20)
-
 
 ## ARRIVALS
 
@@ -47,22 +38,25 @@ claims.daily$ClaimDay365 <- claims.daily$ClaimDay %% 365
 claims.daily$ClaimDay365[claims.daily$ClaimDay365==0] <- 365
 
 claims.daily$Summer <- 0
-claims.daily$Summer[b1[5]<claims.daily$ClaimDay365&claims.daily$ClaimDay365<=b1[9]] <- 1
+claims.daily$Summer[b1[5]<claims.daily$ClaimDay365&claims.daily$ClaimDay365<=b1[9]] <-1
 
 # Branch 1
-lambda1s<-fitdistr(claims.daily$Arrivals[claims.daily$ClaimType==1&claims.daily$Summer==1],"Poisson")$estimate
-lambda1w<-fitdistr(claims.daily$Arrivals[claims.daily$ClaimType==1&claims.daily$Summer==0],"Poisson")$estimate
+lambda1s<-fitdistr(claims.daily$Arrivals[claims.daily$ClaimType==1 &
+                   claims.daily$Summer==1], "Poisson")$estimate
+lambda1w<-fitdistr(claims.daily$Arrivals[claims.daily$ClaimType==1 &
+                   claims.daily$Summer==0], "Poisson")$estimate
 # Branch 2
-lambda2s<-fitdistr(claims.daily$Arrivals[claims.daily$ClaimType==2&claims.daily$Summer==1],"Poisson")$estimate
-lambda2w<-fitdistr(claims.daily$Arrivals[claims.daily$ClaimType==2&claims.daily$Summer==0],"Poisson")$estimate
-
+lambda2s<-fitdistr(claims.daily$Arrivals[claims.daily$ClaimType==2 &
+                   claims.daily$Summer==1], "Poisson")$estimate
+lambda2w<-fitdistr(claims.daily$Arrivals[claims.daily$ClaimType==2 &
+                   claims.daily$Summer==0],"Poisson")$estimate
 
 ### COST
-head(claims.daily, n=20)
-
 par(mfrow=c(2,1))
-plot(claims.daily$ClaimDay[claims.daily$ClaimType==1],claims.daily$MeanCost[claims.daily$ClaimType==1])
-plot(claims.daily$ClaimDay[claims.daily$ClaimType==2],claims.daily$MeanCost[claims.daily$ClaimType==2])
+plot(claims.daily$ClaimDay[claims.daily$ClaimType==1],
+     claims.daily$MeanCost[claims.daily$ClaimType==1])
+plot(claims.daily$ClaimDay[claims.daily$ClaimType==2],
+     claims.daily$MeanCost[claims.daily$ClaimType==2])
 
 par(mfrow=c(2,1))
 hist(claims.daily$MeanCost[claims.daily$ClaimType==1],100)
@@ -90,8 +84,6 @@ lines(dweibull(min(x2):max(x2),fit2[1],fit2[2]),lwd=3)
 
 
 ### Compound
-
-
 months<-c(31,28,31,30,31,30,31,31,30,31,30,31)
 summer<-sum(months[5:8])
 winter<-sum(months[1:4])+sum(months[9:12])
@@ -120,7 +112,6 @@ hist(S[,2],100)
 
 plot(S[,1],S[,2])
 cor(S[,1],S[,2])
-
 
 #save(claims.daily, fit1, fit2, lambda1s,lambda1w,lambda2s,lambda2w, file = "fitted.RData")
 #save(S, file = "S.RData")

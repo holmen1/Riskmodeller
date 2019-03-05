@@ -7,14 +7,17 @@ claims <- read.table("Projekt1_Grupp8.txt", header = TRUE, sep = ";")
 CommonDays<-intersect(claims$ClaimDay[claims$ClaimType==1],
                       claims$ClaimDay[claims$ClaimType==2])
 
-cost.daily <- aggregate(list(ClaimCost=claims$ClaimCost),list(ClaimDay=claims$ClaimDay, ClaimType=claims$ClaimType), sum)
+cost.daily <- aggregate(list(ClaimCost=claims$ClaimCost),
+                        list(ClaimDay=claims$ClaimDay, ClaimType=claims$ClaimType), sum)
 
 #Kontroll korrelation
 D <- matrix(0,length(CommonDays),2)
 for (k in 1:length(CommonDays))
 {
-  D[k,1]<-cost.daily$ClaimCost[cost.daily$ClaimDay==CommonDays[k] & cost.daily$ClaimType==1]
-  D[k,2]<-cost.daily$ClaimCost[cost.daily$ClaimDay==CommonDays[k] & cost.daily$ClaimType==2]
+  D[k,1]<-cost.daily$ClaimCost[cost.daily$ClaimDay==CommonDays[k] &
+                               cost.daily$ClaimType==1]
+  D[k,2]<-cost.daily$ClaimCost[cost.daily$ClaimDay==CommonDays[k] &
+                               cost.daily$ClaimType==2]
 }
 rho.daily<-cor(D[,1],D[,2]) #= 0.2771018
 plot(D[,1],D[,2],main=paste("rho.daily=",rho.daily))
@@ -24,7 +27,10 @@ plot(D[,1],D[,2],main=paste("rho.daily=",rho.daily))
 claims.yearly <- claims
 claims.yearly$ClaimYear <- (claims.yearly$ClaimDay %/% 366) + 1
 
-cost.yearly <- aggregate(list(ClaimCost=claims.yearly$ClaimCost),list(ClaimYear=claims.yearly$ClaimYear, ClaimType=claims.yearly$ClaimType), sum)
+cost.yearly <- aggregate(list(ClaimCost=claims.yearly$ClaimCost),
+                         list(ClaimYear=claims.yearly$ClaimYear,
+                              ClaimType=claims.yearly$ClaimType),
+                         sum)
 
 Y <- matrix(0,10,2)
 for (k in 1:10)

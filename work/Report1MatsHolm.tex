@@ -34,14 +34,10 @@ and
 	 S_2 = \sum_{k=1}^{N_2} Y_k
 \end{align}
 
-With cumulative distribution of $S = S_1 + S_2$ find
-\begin{align*}
-	  \mathrm{P}\left(S < s \right). 
-\end{align*}
-
-
-\subsection*{Mathematical Background}
-({\it Instructions: provide a mathematical background by explaining the key concepts used in your analysis})
+%With cumulative distribution of $S = S_1 + S_2$ find
+%\begin{align*}
+%	  \mathrm{P}\left(S < s \right). 
+%\end{align*}
 
 %%% CLAIM ARRIVAL
 \subsection*{Claim arrival process}
@@ -230,90 +226,311 @@ where $\hat{F}_{12}^\leftharpoonup$ is the inverse empirical cdf for $\tilde{S}$
 and then price $\pi = 1.1R_{SL} = 18507884$.
 
 \subsection*{Summary}
-({\it Summarize your results and state your conclusions. })
+({\it Lacking analysis, calibration and consistency checks. Focused on coverage... })
 
-
-
-\begin{thebibliography}{99}
-\bibitem{Dupire-94}
-B. Dupire (1994),
-Pricing with a smile.
-\emph{Risk}, 7, 18-20.
-\bibitem{Wuthrich-Merz-13}
-  Mario V. W\"{u}thrich and Michael Merz (2013),
-  \emph{Financial Modeling, Actuarial Valuation and Solvency in Insurance},
-  Springer-Verlag Berlin Heidelberg.
-\end{thebibliography}
 
 
 \section*{Appendix}
 
 \begin{verbatim}
+## Risk och reserv Projekt 1
 
-#library(ChainLadder)
-#library(xtable)
+library(MASS)
 
-
-claims <- read.table("Projekt2_Grupp8.txt", header = TRUE, sep = ";")
+claims <- read.table("Projekt1_Grupp8.txt", header = TRUE, sep = ";")
 summary(claims)
 head(claims, n=10)
 
-sub.2 <- subset(claims, is.element(ClaimType, 2), select=c(ClaimDay, PaymentDay, ClaimCost))
+arrivals.daily <- aggregate(list(Arrivals=claims$ClaimDay),
+                            list(ClaimDay=claims$ClaimDay, ClaimType=claims$ClaimType),
+                            length)
+cost.daily <- aggregate(list(Cost=claims$ClaimCost),
+                        list(ClaimDay=claims$ClaimDay, ClaimType=claims$ClaimType), sum)
 
-sub.2$ClaimYear <- sub.2$ClaimDay %/% 366
-sub.2$PaymentYear <- sub.2$PaymentDay %/% 366
+claims.daily<-merge(arrivals.daily,cost.daily)
 
-sub.2.yearly <- aggregate(ClaimCost ~ ClaimYear + PaymentYear, data=sub.2, FUN=sum)
-sub.2.yearly$Development <- sub.2.yearly$PaymentYear - sub.2.yearly$ClaimYear
+claims.365<-subset(claims, select=c("ClaimType","ClaimDay"))
+# Label to days in 1 Y 1-365
+claims.365$ClaimDay365 <- claims.365$ClaimDay %% 365
+claims.365$ClaimDay365[claims.365$ClaimDay365==0] <- 365
 
-#
-sub.2.yearly <- subset(sub.2.yearly, ClaimYear > 9)
-triangle.2 <- incr2cum(as.triangle(sub.2.yearly,
-                                   origin="ClaimYear",
-                                   dev="Development",
-                                   value="ClaimCost"), na.rm = FALSE)
+claims.daily$MeanCost<-claims.daily$Cost/claims.daily$Arrivals
 
-mack.2 <- MackChainLadder(triangle.2, est.sigma="Mack")
-mack.2
-mack.2$f
-mack.2$FullTriangle
-plot(mack.2)
+## ARRIVALS
+
+# Histogram 1Y dividided by 12 months
+par(mfrow=c(2,1))
+h1 <- claims.365$ClaimDay365[claims.365$ClaimType==1]
+b1 <- seq(min(h1), max(h1), length.out = 13)
+hist(h1, breaks=b1)
+h2 <- claims.365$ClaimDay365[claims.365$ClaimType==2]
+b2 <- seq(min(h2), max(h2), length.out = 13)
+hist(h2, breaks=b2)
+
+# From hist, less arrivals June-August
+# Label to days in 1 Y 1-365
+claims.daily$ClaimDay365 <- claims.daily$ClaimDay %% 365
+claims.daily$ClaimDay365[claims.daily$ClaimDay365==0] <- 365
+
+claims.daily$Summer <- 0
+claims.daily$Summer[b1[5]<claims.daily$ClaimDay365&claims.daily$ClaimDay365<=b1[9]] <-1
+
+# Branch 1
+lambda1s<-fitdistr(claims.daily$Arrivals[claims.daily$ClaimType==1 &
+                   claims.daily$Summer==1], "Poisson")$estimate
+lambda1w<-fitdistr(claims.daily$Arrivals[claims.daily$ClaimType==1 &
+                   claims.daily$Summer==0], "Poisson")$estimate
+# Branch 2
+lambda2s<-fitdistr(claims.daily$Arrivals[claims.daily$ClaimType==2 &
+                   claims.daily$Summer==1], "Poisson")$estimate
+lambda2w<-fitdistr(claims.daily$Arrivals[claims.daily$ClaimType==2 &
+                   claims.daily$Summer==0],"Poisson")$estimate
+
+### COST
+par(mfrow=c(2,1))
+plot(claims.daily$ClaimDay[claims.daily$ClaimType==1],
+     claims.daily$MeanCost[claims.daily$ClaimType==1])
+plot(claims.daily$ClaimDay[claims.daily$ClaimType==2],
+     claims.daily$MeanCost[claims.daily$ClaimType==2])
+
+par(mfrow=c(2,1))
+hist(claims.daily$MeanCost[claims.daily$ClaimType==1],100)
+hist(claims.daily$MeanCost[claims.daily$ClaimType==2],100)
+
+# Empirisk fördelningsfunktion
+par(mfrow=c(2,1))
+plot(ecdf(claims.daily$MeanCost[claims.daily$ClaimType==1]))
+plot(ecdf(claims.daily$MeanCost[claims.daily$ClaimType==2]))
+
+# Claims 1
+summary(claims.daily$MeanCost[claims.daily$ClaimType==1])
+x1<-claims.daily$MeanCost[claims.daily$ClaimType==1]
+hist(x1,freq=F)
+fit1<-fitdistr(x1,"lognormal")$estimate
+lines(dlnorm(0:max(x1),fit1[1],fit1[2]),lwd=3)
+
+# Claims 2
+summary(claims.daily$MeanCost[claims.daily$ClaimType==2])
+x2<-claims.daily$MeanCost[claims.daily$ClaimType==2]
+hist(x2,freq=F)
+fit2<-fitdistr(x2,"weibull")$estimate
+#fit2<-fitdistr(x,"weibull",list(shape = 10000, scale = 10), lower = 50)$estimate
+lines(dweibull(min(x2):max(x2),fit2[1],fit2[2]),lwd=3)
 
 
-# Chainladder
-n <- 10
-f <- sapply(1:(n-1),
-               function(i){
-                 sum(triangle.2[c(1:(n-i)),i+1])/sum(triangle.2[c(1:(n-i)),i])
-               }
-)
-
-sigma <- sapply(1:(n-1),
-            function(i){
-              sum(triangle.2[c(1:(n-i)),i]*(triangle.2[c(1:(n-i)),i+1]/triangle.2[c(1:(n-i)),i] - f[i])^2)/(n-i-1)
-            }
-)
-
-
-
-# Ex 1.3
-
-n_val<-1000
+### Compound
+months<-c(31,28,31,30,31,30,31,31,30,31,30,31)
+summer<-sum(months[5:8])
+winter<-sum(months[1:4])+sum(months[9:12])
 runs<-10000
-res_mat2<-matrix(0,runs,3)
-for(i in (1:runs))
+S<-matrix(0,runs,2)
+for (k in 1:runs)
 {
-	z_val<-rnorm(1)
-	z_vec<-rnorm(n_val)
-	res_mat2[i,1]<-sum(exp(z_vec))
-	res_mat2[i,3]<-sum(exp(0.1*z_val+sqrt(1-0.1^2)*z_vec))
+  # Branch 1 lognormal claims
+  N1w<-sum(rpois(lambda1w,winter))
+  N1s<-sum(rpois(lambda1s,summer))
+  N1<-N1w+N1s
+  Y1<-rlnorm(N1,fit1[1],fit1[2])
+  S[k,1]<-sum(Y1)
+  
+  # Branch 2 Weibull claims
+  N2w<-sum(rpois(lambda2w,winter))
+  N2s<-sum(rpois(lambda2s,summer))
+  N2<-N2w+N2s
+  Y2<-rweibull(N2,fit2[1],fit2[2])
+  S[k,2]<-sum(Y2)
 }
 
-par(mfrow=c(1,2))
-hist(res_mat2[,1],75,xlab="",ylab="",main="rho=0",xlim=c(min(res_mat2),max(res_mat2)),
-col="black")
-hist(res_mat2[,3],75,xlab="",ylab="",main="rho=0.1",xlim=c(min(res_mat2),max(res_mat2)),
-col="black")
+par(mfrow=c(2,1))
+hist(S[,1],100)
+hist(S[,2],100)
+
+plot(S[,1],S[,2])
+cor(S[,1],S[,2])
+
+#save(claims.daily, fit1, fit2, lambda1s,lambda1w,lambda2s,lambda2w, file = "fitted.RData")
+#save(S, file = "S.RData")
+
+-------------------------------------------------------------------------------
+
+## Risk och reserv Projekt 1
+library(psych)
+
+claims <- read.table("Projekt1_Grupp8.txt", header = TRUE, sep = ";")
+
+# Olika värdedagar claim1 ? claim2 = inner join
+CommonDays<-intersect(claims$ClaimDay[claims$ClaimType==1],
+                      claims$ClaimDay[claims$ClaimType==2])
+
+cost.daily <- aggregate(list(ClaimCost=claims$ClaimCost),
+                        list(ClaimDay=claims$ClaimDay, ClaimType=claims$ClaimType), sum)
+
+#Kontroll korrelation
+D <- matrix(0,length(CommonDays),2)
+for (k in 1:length(CommonDays))
+{
+  D[k,1]<-cost.daily$ClaimCost[cost.daily$ClaimDay==CommonDays[k] &
+                               cost.daily$ClaimType==1]
+  D[k,2]<-cost.daily$ClaimCost[cost.daily$ClaimDay==CommonDays[k] &
+                               cost.daily$ClaimType==2]
+}
+rho.daily<-cor(D[,1],D[,2]) #= 0.2771018
+plot(D[,1],D[,2],main=paste("rho.daily=",rho.daily))
+
+
+# Yearly claim cost
+claims.yearly <- claims
+claims.yearly$ClaimYear <- (claims.yearly$ClaimDay %/% 366) + 1
+
+cost.yearly <- aggregate(list(ClaimCost=claims.yearly$ClaimCost),
+                         list(ClaimYear=claims.yearly$ClaimYear,
+                              ClaimType=claims.yearly$ClaimType),
+                         sum)
+
+Y <- matrix(0,10,2)
+for (k in 1:10)
+{
+  Y[k,1] <- cost.yearly$ClaimCost[cost.yearly$ClaimYear==k & cost.yearly$ClaimType==1]
+  Y[k,2] <- cost.yearly$ClaimCost[cost.yearly$ClaimYear==k & cost.yearly$ClaimType==2]
+}
+rho.yearly<-cor(Y[,1],Y[,2]) #= 0.4308468
+plot(Y[,1],Y[,2],main=paste("rho.yearly=",rho.yearly))
+
+
+### Copulas
+
+# Simulations of cost after 1 Y
+# S1 Poisson/lognormal
+# S2 Poisson/Weibull
+load("S.RData")
+#head(S,n=20)
+
+
+n <- 100000
+#rho<-0.5
+# Create bivariate N[0,1]xN[0,1] w correlation rho
+sigma <- matrix(c(1.0,  rho.yearly,
+                  rho.yearly,  1.0), nrow=2)
+x <- mvrnorm(n, mu=rep(0, 2), Sigma=sigma, empirical=TRUE)
+
+# Transform to U[0,1]xU[0,1] u=F(x)
+u <- pnorm(x)
+
+# Inverse of empirical cdf from sampled marginaldistribution 
+S1<-quantile(S[,1],u[,1],type=4)
+S2<-quantile(S[,2],u[,2],type=4)
+
+
+#save(S1,S2, file = "C.RData")
+
+z<-cbind(S1,S2)
+pairs.panels(z)
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+## Risk och reserv Projekt 1
+
+### BOOTSTRAP
+
+claims <- read.table("Projekt1_Grupp8.txt", header = TRUE, sep = ";")
+
+claims.daily <- aggregate(list(ClaimCost=claims$ClaimCost),
+                          list(ClaimDay=claims$ClaimDay,
+                               ClaimType=claims$ClaimType), sum)
+claims.daily$ClaimDay365 <- claims.daily$ClaimDay %% 365
+claims.daily$ClaimDay365[claims.daily$ClaimDay365==0] <- 365
+
+claims.daily$ClaimYear <- (claims.daily$ClaimDay%/%366) +1
+claims.daily$ClaimMonth <- 0
+
+months<-c(0,31,28,31,30,31,30,31,31,30,31,30,31)
+months.cum<-cumsum(months)
+
+for (m in 1:(length(months.cum)-1))
+  claims.daily$ClaimMonth[months.cum[m] < claims.daily$ClaimDay365 &
+                            claims.daily$ClaimDay365 <= months.cum[m+1]]<- m
+
+cost.monthly<-aggregate(list(ClaimCost=claims.daily$ClaimCost),
+                        list(ClaimYear=claims.daily$ClaimYear,
+                             ClaimMonth=claims.daily$ClaimMonth,
+                             ClaimType=claims.daily$ClaimType),
+                        sum)
+
+# Showing wintersummer
+rho.ws <- cor(cost.monthly$ClaimCost[cost.monthly$ClaimType==1],
+              cost.monthly$ClaimCost[cost.monthly$ClaimType==2])
+plot(cost.monthly$ClaimCost[cost.monthly$ClaimType==1],
+     cost.monthly$ClaimCost[cost.monthly$ClaimType==2],
+     main=paste("rho=",rho.ws))
+
+
+year <- unique(cost.monthly$ClaimYear)
+month <- unique(cost.monthly$ClaimMonth)
+
+
+tmp<-unique(cost.monthly[c("ClaimYear","ClaimMonth")])
+tmp$Cost1 <- cost.monthly$ClaimCost[tmp$ClaimYear==cost.monthly$ClaimYear &
+                                    tmp$ClaimMonth==cost.monthly$ClaimMonth &
+                                    cost.monthly$ClaimType == 1]
+tmp$Cost2 <- cost.monthly$ClaimCost[tmp$ClaimYear==cost.monthly$ClaimYear &
+                                    tmp$ClaimMonth==cost.monthly$ClaimMonth &
+                                    cost.monthly$ClaimType == 2]
+
+winter.months<-c(1,2,3,4,9,10,11,12)
+summer.months<-c(5,6,7)
+# Winter
+cost.winter<-subset(tmp, is.element(tmp$ClaimMonth, winter.months), 
+                    select=c(Cost1,Cost2))
+# Summer
+cost.summer<-subset(tmp, is.element(tmp$ClaimMonth, summer.months), 
+                    select=c(Cost1,Cost2))
+
+n <- 1000
+BS <- matrix(0,n,2)
+for (k in 1:n)
+{
+  s.W<-tmp[sample(nrow(cost.winter),8, replace=TRUE),]
+  s.S<-tmp[sample(nrow(cost.summer),4, replace=TRUE),]
+  BS[k,1]<-sum(s.W$Cost1) + sum(s.S$Cost1)
+  BS[k,2]<-sum(s.W$Cost2) + sum(s.S$Cost2)
+}
+rho.bs <- cor(BS[,1],BS[,2]) #= 0.8629129
+plot(BS[,1],BS[,2],main=paste("rho=",rho.bs))
+
+---------------------------------------------------------------------------------------------
+
+## Risk och reserv Projekt 1
+
+#save(S1,S2, file = "C.RData")
+# Generated copula (S1,S2)
+load("C.RData")
+
+summary(S1)
+# Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+# 64835115 69340476 70366080 70330397 71315888 75126283 
+quantile(S1,0.5)
+# 50% 
+# 70366080
+quantile(S1,c(0.1,0.5,0.9))
+v <- (1:100)/100
+plot(v,quantile(S1,v))
+
+hist(S1+S2,100)
+
+plot(v,quantile(S1+S2,v))
+
+# SL-cover single
+summary(S1+S2)
+K <- quantile(S1+S2,0.9)
+
+Rsl <- max(0,S1+S2-K)
+price <- 1.1*mean(Rsl)
+
+
+
+
+
 \end{verbatim}
 
 

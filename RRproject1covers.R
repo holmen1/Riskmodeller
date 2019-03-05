@@ -1,6 +1,7 @@
 ## Risk och reserv Projekt 1
 
-#library(MASS)
+#save(S1,S2, file = "C.RData")
+# Generated copula (S1,S2)
 load("C.RData")
 
 summary(S1)
@@ -13,10 +14,7 @@ quantile(S1,c(0.1,0.5,0.9))
 v <- (1:100)/100
 plot(v,quantile(S1,v))
 
-
 hist(S1+S2,100)
-
-
 
 plot(v,quantile(S1+S2,v))
 
