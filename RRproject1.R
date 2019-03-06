@@ -83,6 +83,21 @@ fit2<-fitdistr(x2,"weibull")$estimate
 lines(dweibull(min(x2):max(x2),fit2[1],fit2[2]),lwd=3)
 
 
+## Q-Q check
+n1 <- length(x1)
+x1.sorted <- sort(x1,dec=FALSE)
+plot(x1.sorted,qlnorm((1:n1)/(n1+1),fit1[1],fit1[2]),
+     xlim=c(0,max(x1)*0.5), ylim=c(0,max(x1)*0.3),
+     xlab="data",ylab="model",main="QQ lognormal")
+lines(x1.sorted,x1.sorted)
+
+n2 <- length(x2)
+x2.sorted <- sort(x2,dec=FALSE)#asp=1
+plot(x2.sorted,qweibull((1:n2)/(n2+1),fit2[1],fit2[2]),
+     xlim=c(0,max(x2)*0.5), ylim=c(0,max(x2)*0.3),
+     xlab="data",ylab="model",main="QQ weibull")
+lines(x2.sorted,x2.sorted)
+
 ### Compound
 months<-c(31,28,31,30,31,30,31,31,30,31,30,31)
 summer<-sum(months[5:8])

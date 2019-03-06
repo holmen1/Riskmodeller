@@ -145,9 +145,9 @@ truncpardens<-function(x,a,g,s)
 }
 
 library(MASS)
-estvec_ml<-fitdistr(lossvals[1:39],truncpardens,start=list(a=2,g=3000),s=lossvals[1],lower=c(0,0))$estimate
 
 plot(sort(xvals,dec=F),estvec_ml[2]*((1-(1:n)/(n+1))^(-1/estvec_ml[1])-1),xlab="data",ylab="model",main="mlfit 2")
+estvec_ml<-fitdistr(lossvals[1:39],truncpardens,start=list(a=2,g=3000),s=lossvals[1],lower=c(1,100))$estimate
 
 estvec_ls
 
