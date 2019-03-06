@@ -44,7 +44,15 @@ bootstraping method or with a Gaussian copula.
 
 %%% CLAIM ARRIVAL
 \subsection*{Claim arrival process}
-By labeling each ClaimDay between 1-365 and plot the histogram we see in Figure \ref{fig:samplefig1} we see that both ClaimTypes show a common decrease during 'summer'. This requires an inhomogenuos process. In $N_t  \sim  \mathrm{Pois}(\mu(t))$, where  $\mu(t) = \lambda t$. We get from R $fitdistr$
+By labeling each ClaimDay between 1-365 and plot the histogram we see in Figure \ref{fig:samplefig1} that both ClaimTypes show a common decrease during 'summer'.
+ \begin{figure}[H]
+ \center
+  \includegraphics[scale=.5]{histyear.png}
+  \caption{Summer slowdown}
+  \label{fig:samplefig1}
+\end{figure}
+
+This requires an inhomogenuos process. In $N_t  \sim  \mathrm{Pois}(\mu(t))$, where  $\mu(t) = \lambda t$. We get from R $fitdistr$
 
 %\begin{align}\label{eq:N}
 %	N_t  \sim  \mathrm{Pois}(\mu(t))
@@ -64,32 +72,34 @@ Type & Winter & Summer \\
 \caption{Sample table. Use informative captions.} \label{tab:sampletab}
 \end{table}
 
- \begin{figure}[H]
- \center
-  \includegraphics[scale=.5]{histyear.png}
-  \caption{Summer slowdown}
-  \label{fig:samplefig1}
-\end{figure}
+
 
 
 %%% CLAIM COST
 \subsection*{Claim cost}
 First,  we see in Figure \ref{fig:samplefig2} we see that both ClaimTypes show no apparent seasonal variation.
+ \begin{figure}[H]
+ \center
+  \includegraphics[scale=.5]{meancost.png}
+  \caption{Daily meancost}
+  \label{fig:samplefig2}
+\end{figure}
 
-ClaimType 1 lognornam
-ClaimType 2 weibull
- Figure \ref{fig:samplefig3} we see that both ClaimTypes show no apparent seasonal variation.
-
+Without to much analysis we chose lognormal for
+ClaimType 1
 \begin{align}\label{eq:N}
 	f_{X}(x) = \dfrac{1}{\sqrt{2\pi}\sigma x} \exp\left(-\dfrac{(\log x - \mu)^2}{2\sigma^2}\right) , 
 \end{align}
 for all i.i.d. $X_k$ in (\ref{eq:sum1}).
 
+And Weibull for
+ClaimType 2
 \begin{align}\label{eq:N}
 	f_{Y}(y) = c \tau y^{\tau - 1}e^{-cy^\tau} , 
 \end{align}
 for all i.i.d. $Y_k$ in (\ref{eq:sum2}).
 
+With values in \ref{tab:cost}
 \begin{table}[!ht]
 \center
 \begin{tabular}{|r|rr|}
@@ -98,22 +108,19 @@ for all i.i.d. $Y_k$ in (\ref{eq:sum2}).
 2 Weibull & $\tau=$1.148278 ,& $c=$105523\\
 \hline
 \end{tabular}
-\caption{Sample table. Use informative captions.} \label{tab:cost}
+\caption{Sample table} \label{tab:cost}
 \end{table}
 
- \begin{figure}[H]
- \center
-  \includegraphics[scale=.5]{meancost.png}
-  \caption{Daily meancost}
-  \label{fig:samplefig2}
-\end{figure}
+
+we show the fit Figure \ref{fig:samplefig3}. No too good fit, which we will study with help of qq-plots below.
+
 
  \begin{figure}[H]
  \center
   \includegraphics[scale=.5]{histfit.png}
-  \caption{Daily meancost}
   \label{fig:samplefig3}
 \end{figure}
+
 
 QQ-plot showing, see fig \ref{fig:qqplot}
 
@@ -219,7 +226,7 @@ a Gaussian copula $ \left(\tilde{S_1},\tilde{S_2}\right)$!
 
  \begin{figure}[H]
  \center
-  \includegraphics[scale=.5]{pairs5.png}
+  \includegraphics[scale=0.8]{pairs5.png}
   \caption{Gaussian Copula}
   \label{fig:samplefig5}
 \end{figure}
