@@ -18,21 +18,24 @@
 \maketitle
 \section*{Project I}
 \subsection*{Objectives}
-({\it Instructions: highlight the project objectives})
-\\
+
 In this project we analyze claim
 arrival times and claim size distributions for two insurance products.
-We will model
+The task is to model
 the distribution of the total claim cost for claim arrivals from today until one year from
-today in case of no reinsurance arrangement...
+today. We have 10 years of data from two non-life branches. The goal is then to form two processes of the total claim amount,
 
 \begin{align} \label{eq:sum1}
-	S_1 = \sum_{k=1}^{N_1}  X_k   
+	S_1 = \sum_{k=1}^{N_1}  X_k 
 \end{align}
 and
 \begin{align} \label{eq:sum2}
-	 S_2 = \sum_{k=1}^{N_2} Y_k
+	 S_2 = \sum_{k=1}^{N_2} Y_k,
 \end{align}
+
+where $N_i$ will be modelled as non-homogenous Poisson processes, $X$ and $Y$ with something else. We will try to capture the dependence between
+$S_1$ and $S_2$ by  either the
+bootstraping method or with a Gaussian copula.
 
 %With cumulative distribution of $S = S_1 + S_2$ find
 %\begin{align*}
@@ -41,12 +44,12 @@ and
 
 %%% CLAIM ARRIVAL
 \subsection*{Claim arrival process}
-By labeling each ClaimDay between 1-365 and plot the histogram we see in Figure \ref{fig:samplefig1} we see that both ClaimTypes show a common decrease during 'summer'. This requires an inhomogenuos process. We chose
+By labeling each ClaimDay between 1-365 and plot the histogram we see in Figure \ref{fig:samplefig1} we see that both ClaimTypes show a common decrease during 'summer'. This requires an inhomogenuos process. In $N_t  \sim  \mathrm{Pois}(\mu(t))$, where  $\mu(t) = \lambda t$. We get from R $fitdistr$
 
-\begin{align}\label{eq:N}
-	N_t  \sim  \mathrm{Pois}(\mu(t))
-\end{align}
-In \eqref{eq:N} we chose $\mu(t) = \lambda t$. With $\lambda$ for different claim types and season. Found with the help of R $fitdistr$-function.
+%\begin{align}\label{eq:N}
+%	N_t  \sim  \mathrm{Pois}(\mu(t))
+%\end{align}
+%In \eqref{eq:N} we chose $\mu(t) = \lambda t$. With $\lambda$ for different claim types and season. Found with the help of R $fitdistr$-function.
 
 
 \begin{table}[!ht]
@@ -111,6 +114,25 @@ for all i.i.d. $Y_k$ in (\ref{eq:sum2}).
   \caption{Daily meancost}
   \label{fig:samplefig3}
 \end{figure}
+
+QQ-plot showing, see fig \ref{fig:qqplot}
+
+ \begin{figure}[H]
+ \center
+  \includegraphics[scale=.5]{qqplot.png}
+  \caption{QQ-plot}
+  \label{fig:qqplot}
+\end{figure}
+
+Underestimation of right tail see fig \ref{fig:fit}
+
+ \begin{figure}[H]
+ \center
+  \includegraphics[scale=.5]{lognormalhistfit.png}
+  \caption{Fat tails}
+  \label{fig:fit}
+\end{figure}
+
 
 With these assumptions we can 
  create random samples of a yearly cost by
@@ -223,7 +245,7 @@ where $\hat{F}_{12}^\leftharpoonup$ is the inverse empirical cdf for $\tilde{S}$
 \begin{align} \label{eqsl1}
 	R_{SL} = \dfrac{1}{N}\sum_{n=1}^N\left(	 \tilde{S}^{(n)}-K\right)_+        
 \end{align}
-and then price $\pi = 1.1R_{SL} = 18507884$.
+and then price $\pi = 1.1R_{SL} = 18,507,884$.
 
 \subsection*{Summary}
 ({\it Lacking analysis, calibration and consistency checks. Focused on coverage... })

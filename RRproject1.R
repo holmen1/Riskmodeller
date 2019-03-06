@@ -87,15 +87,25 @@ lines(dweibull(min(x2):max(x2),fit2[1],fit2[2]),lwd=3)
 n1 <- length(x1)
 x1.sorted <- sort(x1,dec=FALSE)
 plot(x1.sorted,qlnorm((1:n1)/(n1+1),fit1[1],fit1[2]),
-     xlim=c(0,max(x1)*0.5), ylim=c(0,max(x1)*0.3),
+     xlim=c(min(x1),max(x1)*0.55), ylim=c(min(x1),max(x1)*0.3),
      xlab="data",ylab="model",main="QQ lognormal")
 lines(x1.sorted,x1.sorted)
 
 n2 <- length(x2)
 x2.sorted <- sort(x2,dec=FALSE)#asp=1
 plot(x2.sorted,qweibull((1:n2)/(n2+1),fit2[1],fit2[2]),
-     xlim=c(0,max(x2)*0.5), ylim=c(0,max(x2)*0.3),
+     xlim=c(0,max(x2)*0.55), ylim=c(0,max(x2)*0.3),
      xlab="data",ylab="model",main="QQ weibull")
+lines(x2.sorted,x2.sorted)
+
+par(mfrow=c(1,2))
+plot(x1.sorted,qlnorm((1:n1)/(n1+1),fit1[1],fit1[2]),
+     xlim=c(min(x1),max(x1)*0.5), ylim=c(min(x1),max(x1)*0.5),
+     xlab="data",ylab="model",main="lognormal")
+lines(x1.sorted,x1.sorted)
+plot(x2.sorted,qweibull((1:n2)/(n2+1),fit2[1],fit2[2]),
+     xlim=c(0,max(x2)*0.5), ylim=c(0,max(x2)*0.5),
+     xlab="data",main="weibull")
 lines(x2.sorted,x2.sorted)
 
 ### Compound
