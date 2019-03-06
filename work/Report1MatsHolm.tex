@@ -121,8 +121,16 @@ we show the fit Figure \ref{fig:samplefig3}. No too good fit, which we will stud
   \label{fig:samplefig3}
 \end{figure}
 
+With these estimated parameters we plot the ordered observations against the inverse distribution function  i.e
+\begin{align*}
+	\bigg\{ \left( X_k, F_X^{-1}\left(\dfrac{k}{n+1}\right)\right),k=1,\dots,n \bigg\}
+\end{align*}
+and
+\begin{align*}
+	\bigg\{ \left( Y_k, F_Y^{-1}\left(\dfrac{k}{n+1}\right)\right),k=1,\dots,n \bigg\}.
+\end{align*}
 
-QQ-plot showing, see fig \ref{fig:qqplot}
+The resulting QQ-plots in fig \ref{fig:qqplot} shows that this choice give a really bad fit of the right tail.
 
  \begin{figure}[H]
  \center
@@ -131,7 +139,7 @@ QQ-plot showing, see fig \ref{fig:qqplot}
   \label{fig:qqplot}
 \end{figure}
 
-Underestimation of right tail see fig \ref{fig:fit}
+Weibull is worst, but can easily be seen in the lognormal case. See Figure \ref{fig:fit}
 
  \begin{figure}[H]
  \center
@@ -140,24 +148,24 @@ Underestimation of right tail see fig \ref{fig:fit}
   \label{fig:fit}
 \end{figure}
 
-
+\subsection*{Total claim amount process}
 With these assumptions we can 
  create random samples of a yearly cost by
 
-First $\hat{N} <-  sum(rpois(lambdaw,winterdays)) +  sum(rpois(lambdas,summerdays))$
+First $\hat{N} =  sum(rpois(lambdaw,winterdays)) +  sum(rpois(lambdas,summerdays))$
 which we use in
 
 then
 \begin{align*} 
-	\hat{X} <- rlnorm(\hat{N}_1,\mu log,\sigma log) 
+	\hat{X} = \mathrm{rlnorm}(\hat{N}_1,\mu log,\sigma log) 
 \end{align*}
 and
 \begin{align*} 
-	 \hat{Y} <- rweibull(\hat{N}_2,\tau,c)
+	 \hat{Y} =\mathrm{ rweibull}(\hat{N}_2,\tau,c)
 \end{align*}
 
 
-then we model total claim cost after one year by
+Then we model total claim cost after one year by
 \begin{align} \label{eq:sum1}
 	\hat{S_1} = \sum_{k=1}^{\hat{N}_1} \hat{ X}_k   
 \end{align}
@@ -193,20 +201,26 @@ Before creating cumulative distribution, we check dependence between historical 
 
 %% Bootstrap
 \subsubsection*{Bootstrap}
+One idea is to generate a fictive
+sample for the year by draw uniformly with replacement among monthly claims $S_{1,1},\dots,S_{1,120}$
+and $S_{2,1},\dots,S_{2,120}$
+from the historical observations. Then
 
-
+Plotting monthly costs from data $S_1$ and $S_2$, we see dependence ond seasonal variation in Figure \ref{fig:season}.
  \begin{figure}[H]
  \center
   \includegraphics[height=8cm, width=10cm]{wintersummer.png}
-  \caption{Yearly cost 10Y}
+  \caption{Montly cost, observed}
   \label{fig:season}
 \end{figure}
 
+
+Then from the fictive sample the result is shown in Figure \ref{fig:bs}
  \begin{figure}[H]
  \center
   \includegraphics[height=8cm, width=10cm]{bs.png}
-  \caption{Yearly cost 10Y}
-  \label{fig:season}
+  \caption{Simulated cost}
+  \label{fig:bs}
 \end{figure}
 
 %% Copula

@@ -70,14 +70,14 @@ plot(ecdf(claims.daily$MeanCost[claims.daily$ClaimType==2]))
 # Claims 1
 summary(claims.daily$MeanCost[claims.daily$ClaimType==1])
 x1<-claims.daily$MeanCost[claims.daily$ClaimType==1]
-hist(x1,freq=F)
+hist(x1,200,freq=F,main="lognormal")
 fit1<-fitdistr(x1,"lognormal")$estimate
 lines(dlnorm(0:max(x1),fit1[1],fit1[2]),lwd=3)
 
 # Claims 2
 summary(claims.daily$MeanCost[claims.daily$ClaimType==2])
 x2<-claims.daily$MeanCost[claims.daily$ClaimType==2]
-hist(x2,freq=F)
+hist(x2,100,freq=F)
 fit2<-fitdistr(x2,"weibull")$estimate
 #fit2<-fitdistr(x,"weibull",list(shape = 10000, scale = 10), lower = 50)$estimate
 lines(dweibull(min(x2):max(x2),fit2[1],fit2[2]),lwd=3)
@@ -107,6 +107,14 @@ plot(x2.sorted,qweibull((1:n2)/(n2+1),fit2[1],fit2[2]),
      xlim=c(0,max(x2)*0.5), ylim=c(0,max(x2)*0.5),
      xlab="data",main="weibull")
 lines(x2.sorted,x2.sorted)
+
+
+# Claims 1 tail detail
+n1 <- length(x1)
+x1.sorted <- sort(x1,dec=TRUE)
+x1.tail <- x1.sorted[3000 < x1.sorted & x1.sorted < 100000]
+hist(x1,50,freq=F)
+lines(dlnorm(x1,fit1[1],fit1[2]),lwd=3)
 
 ### Compound
 months<-c(31,28,31,30,31,30,31,31,30,31,30,31)
