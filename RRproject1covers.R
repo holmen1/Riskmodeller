@@ -21,6 +21,8 @@ plot(v,quantile(S1+S2,v))
 # SL-cover single
 summary(S1+S2)
 K <- quantile(S1+S2,0.9)
+# 249130402
 
 Rsl <- max(0,S1+S2-K)
 price <- 1.1*mean(Rsl)
+# 18507884

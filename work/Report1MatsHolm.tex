@@ -69,7 +69,7 @@ Type & Winter & Summer \\
 2 & $\lambda=$6.77 & $\lambda=$2.1\\
 \hline
 \end{tabular}
-\caption{Sample table. Use informative captions.} \label{tab:sampletab}
+\caption{Poisson intensity} \label{tab:sampletab}
 \end{table}
 
 
@@ -77,7 +77,7 @@ Type & Winter & Summer \\
 
 %%% CLAIM COST
 \subsection*{Claim cost}
-First,  we see in Figure \ref{fig:samplefig2} we see that both ClaimTypes show no apparent seasonal variation.
+First,  we see in Figure \ref{fig:samplefig2} that both ClaimTypes show no apparent seasonal variation.
  \begin{figure}[H]
  \center
   \includegraphics[scale=.5]{meancost.png}
@@ -85,21 +85,21 @@ First,  we see in Figure \ref{fig:samplefig2} we see that both ClaimTypes show n
   \label{fig:samplefig2}
 \end{figure}
 
-Without to much analysis we chose lognormal for
+Without to much analysis we chose a lognormal distribution for
 ClaimType 1
-\begin{align}\label{eq:N}
+\begin{align*}
 	f_{X}(x) = \dfrac{1}{\sqrt{2\pi}\sigma x} \exp\left(-\dfrac{(\log x - \mu)^2}{2\sigma^2}\right) , 
-\end{align}
+\end{align*}
 for all i.i.d. $X_k$ in (\ref{eq:sum1}).
 
 And Weibull for
 ClaimType 2
-\begin{align}\label{eq:N}
+\begin{align*}
 	f_{Y}(y) = c \tau y^{\tau - 1}e^{-cy^\tau} , 
-\end{align}
+\end{align*}
 for all i.i.d. $Y_k$ in (\ref{eq:sum2}).
 
-With values in \ref{tab:cost}
+With values in Table \ref{tab:cost}
 \begin{table}[!ht]
 \center
 \begin{tabular}{|r|rr|}
@@ -112,13 +112,12 @@ With values in \ref{tab:cost}
 \end{table}
 
 
-we show the fit Figure \ref{fig:samplefig3}. No too good fit, which we will study with help of qq-plots below.
-
-
+The result is shown in Figure \ref{fig:xxx} below. Not too good fit, which we will study with help of qq-plots below.
  \begin{figure}[H]
  \center
   \includegraphics[scale=.5]{histfit.png}
-  \label{fig:samplefig3}
+ \caption{Fitted model}
+  \label{fig:xxx}
 \end{figure}
 
 With these estimated parameters we plot the ordered observations against the inverse distribution function  i.e
@@ -130,7 +129,7 @@ and
 	\bigg\{ \left( Y_k, F_Y^{-1}\left(\dfrac{k}{n+1}\right)\right),k=1,\dots,n \bigg\}.
 \end{align*}
 
-The resulting QQ-plots in fig \ref{fig:qqplot} shows that this choice give a really bad fit of the right tail.
+The resulting QQ-plots in fig \ref{fig:qqplot} shows that this choice give a really bad fit of the right tails.
 
  \begin{figure}[H]
  \center
@@ -148,14 +147,13 @@ Weibull is worst, but can easily be seen in the lognormal case. See Figure \ref{
   \label{fig:fit}
 \end{figure}
 
+%%
 \subsection*{Total claim amount process}
 With these assumptions we can 
  create random samples of a yearly cost by
 
 First $\hat{N} =  sum(rpois(lambdaw,winterdays)) +  sum(rpois(lambdas,summerdays))$
 which we use in
-
-then
 \begin{align*} 
 	\hat{X} = \mathrm{rlnorm}(\hat{N}_1,\mu log,\sigma log) 
 \end{align*}
@@ -166,11 +164,11 @@ and
 
 
 Then we model total claim cost after one year by
-\begin{align} \label{eq:sum1}
+\begin{align} \label{eq:sum12}
 	\hat{S_1} = \sum_{k=1}^{\hat{N}_1} \hat{ X}_k   
 \end{align}
 and
-\begin{align} \label{eq:sum2}
+\begin{align} \label{eq:sum22}
 	 \hat{S_2} = \sum_{k=1}^{\hat{N}_2} \hat{Y}_k
 \end{align}
 
@@ -202,11 +200,11 @@ Before creating cumulative distribution, we check dependence between historical 
 %% Bootstrap
 \subsubsection*{Bootstrap}
 One idea is to generate a fictive
-sample for the year by draw uniformly with replacement among monthly claims $S_{1,1},\dots,S_{1,120}$
+sample for the year by drawing uniformly with replacement among monthly claims $S_{1,1},\dots,S_{1,120}$
 and $S_{2,1},\dots,S_{2,120}$
-from the historical observations. Then
+from the historical observations. 
 
-Plotting monthly costs from data $S_1$ and $S_2$, we see dependence ond seasonal variation in Figure \ref{fig:season}.
+Plotting the monthly costs from data $S_1$ and $S_2$, we see dependence and seasonal variation in Figure \ref{fig:season}.
  \begin{figure}[H]
  \center
   \includegraphics[height=8cm, width=10cm]{wintersummer.png}
@@ -226,17 +224,17 @@ Then from the fictive sample the result is shown in Figure \ref{fig:bs}
 %% Copula
 \subsubsection*{Copula}
 With the help of R 
-First create normar bivariate $Z_1,Z_2$.
+First create normal bivariate $Z_1,Z_2$.
 \begin{align} \label{eq:bi1}
 	 \begin{bmatrix} Z_1 \\ Z_2\end{bmatrix} \sim N\left(\begin{bmatrix} 0 \\ 0\end{bmatrix},\begin{bmatrix} 1&\rho \\ \rho&1\end{bmatrix}\right)
 \end{align}
 then from   $\left(\Phi(Z_1),\Phi(Z_2)\right) \sim  U[0,1] \times U[0,1]$ .
-With $\hat{F}_1^\leftharpoonup$ and $\hat{F}_2^\leftharpoonup$ the inverse empirical cdf from $\hat{S_1}$ and $\hat{S_2}$ respectively.
+With $\hat{F}_1^\leftharpoonup$ and $\hat{F}_2^\leftharpoonup$ the empirical quantile functions for $\hat{S_1}$ and $\hat{S_2}$ respectively.
 We get
 \begin{align} \label{eq:bi3}
 	  \left(\tilde{S_1},\tilde{S_2}\right) = \left(\hat{F}_X^\leftharpoonup(\Phi(Z_1)),\hat{F}_Y^\leftharpoonup(\Phi(Z_2))\right) 
 \end{align}
-a Gaussian copula $ \left(\tilde{S_1},\tilde{S_2}\right)$!
+a Gaussian copula with correlation coefficient $ \rho$.
 
  \begin{figure}[H]
  \center
@@ -245,33 +243,31 @@ a Gaussian copula $ \left(\tilde{S_1},\tilde{S_2}\right)$!
   \label{fig:samplefig5}
 \end{figure}
 
-\subsection*{XL covers}
+%\subsection*{XL covers}
 
-\subsection*{SL covers}
+%\subsection*{SL covers}
 
 %%% STOPLOSS
 \subsection*{SL cover}
-Let
+We model the total cost $\tilde{S}$ by $N$ generated samples from the copula in (\ref{eq:bi3}).
 \begin{align*} 
 	\tilde{S}= \tilde{S_1} + \tilde{S_2}
 \end{align*}
-model total cost.
 
-Then, with ... we find the 10\%-quantile
+
+Then, with $\hat{F}_{12}^\leftharpoonup$ the empirical quantile function for $\tilde{S}$ we find the 10\%-quantile retention level
 \begin{align*} 
-	K = \hat{F}_{12}^\leftharpoonup(0.9)
+	K = \hat{F}_{12}^\leftharpoonup(0.9) = 249,130,402.
 \end{align*}
-where $\hat{F}_{12}^\leftharpoonup$ is the inverse empirical cdf for $\tilde{S}$  formed from copula $(\tilde{S_1}, \tilde{S_2})$.
 
+The estimate of the amount  is calculated by
 \begin{align} \label{eqsl1}
-	R_{SL} = \dfrac{1}{N}\sum_{n=1}^N\left(	 \tilde{S}^{(n)}-K\right)_+        
+	R_{SL} = \dfrac{1}{N}\sum_{n=1}^N\left(	 \tilde{S}^{(n)}-K\right)_+ ,    
 \end{align}
-and then price $\pi = 1.1R_{SL} = 18,507,884$.
+and then finally, the price $\pi = 1.1R_{SL} = 18,507,884$.
 
-\subsection*{Summary}
-({\it Lacking analysis, calibration and consistency checks. Focused on coverage... })
-
-
+\subsection*{Brasklapp}
+{\it Till denna inlämning är jag nödd och tvungen. Prioriterade fler metoder framför kalibrering och inkonsekventa korrelationer t.ex.}.
 
 \section*{Appendix}
 

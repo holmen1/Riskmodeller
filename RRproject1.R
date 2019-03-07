@@ -27,10 +27,10 @@ claims.daily$MeanCost<-claims.daily$Cost/claims.daily$Arrivals
 par(mfrow=c(2,1))
 h1 <- claims.365$ClaimDay365[claims.365$ClaimType==1]
 b1 <- seq(min(h1), max(h1), length.out = 13)
-hist(h1, breaks=b1)
+hist(h1, breaks=b1,main="Arrivals ClaimType 1")
 h2 <- claims.365$ClaimDay365[claims.365$ClaimType==2]
 b2 <- seq(min(h2), max(h2), length.out = 13)
-hist(h2, breaks=b2)
+hist(h2, breaks=b2,main="Arrivals ClaimType 2")
 
 # From hist, less arrivals June-August
 # Label to days in 1 Y 1-365
