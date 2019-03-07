@@ -10,20 +10,30 @@
 \DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
 
 \title{Report II - MT7027 Risk Models and Reserving in Non-Life Insurance}
-\author{Mats Holm nnnnnn-nnnn }
+\author{Mats Holm}
 \date{8 March, 2019}                                           % Activate to display a given date or no date
 
 \begin{document}
 \maketitle
 \section*{Project II}
 \subsection*{Objectives}
-({\it Instructions: highlight the project objectives})
-\\
 In this project we analyze claim
 arrival times and claim size distributions for two insurance products.
+\\
 
+
+Formulas and equations to calculate reserve:
+\begin{align*}
+	\hat{f_k} = \dfrac{\sum_{i=1}^{n-k} C_{i,k+1}} {\sum_{i=1}^{n-k} C_{i,k}}
+\end{align*}
+
+\begin{align*}
+	\hat{R_k} = C_{k,I+1-k} \left(  \hat{f}_{I+1-k} \cdots \hat{f}=_{I-1}-1\right)
+\end{align*}
+The reserve is then obtained from the sum of $\hat{R_k}$ above.
 
 \subsubsection*{Chain ladder reserve}
+
 
 \begin{table}[ht]
 \centering
@@ -44,8 +54,9 @@ arrival times and claim size distributions for two insurance products.
 \end{tabular}}
 \end{table}
 
-
-\begin{table}[ht]
+From ClaimType 2's cumulative claims triangle 
+we use CRAN package $ChainLadder$ \cite{CL} to obtain full triangle.
+\begin{table}[H]
 \centering
 \resizebox{\textwidth}{!}{\begin{tabular}{rrrrrrrrrrr}
  & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ 
@@ -63,9 +74,6 @@ arrival times and claim size distributions for two insurance products.
    \hline
 \end{tabular}}
 \end{table}
-
-
-
 
 
 \begin{table}[ht]
@@ -87,70 +95,8 @@ arrival times and claim size distributions for two insurance products.
 \end{tabular}
 \end{table}
 
-\begin{table}[ht]
-\centering
-\begin{tabular}{rr}
-     
-  \hline
-&                  Totals\\
-\hline
-Latest:  & 261,498,393.00\\
-Dev:        &        0.83\\
-Ultimate: &316,025,392.83\\
-IBNR:  &    54,526,999.83\\
-Mack.S.E&    4,235,733.32\\
-CV(IBNR): &          0.08\\
-   \hline
-\end{tabular}
-\end{table}
 
- in Figure \ref{fig:ultimate} w
-
- \begin{figure}[H]
- \center
-  \includegraphics[scale=.5]{uclaims.png}
-  \caption{Ultimate claims}
-  \label{fig:ultimate}
-\end{figure}
-
- \begin{figure}[H]
- \center
-  \includegraphics[scale=.5]{devperiod.png}
-  \caption{Ultimate claims}
-  \label{fig:dev}
-\end{figure}
-
- \begin{figure}[H]
- \center
-  \includegraphics[scale=.5]{plotmack.png}
-  \caption{Ultimate claims}
-  \label{fig:mack}
-\end{figure}
-
- \begin{figure}[H]
- \center
-  \includegraphics[scale=.5]{uclaims.png}
-  \caption{Ultimate claims}
-  \label{fig:ultimate}
-\end{figure}
-\subsection*{Results}
-
-({\it Explain your derivation of ... and display and comment on your simulation results, etc. Include tables and figures as needed and refer to them as follows. In Table \ref{tab:sampletab} we see an example of a sample table. In Figure \ref{fig:samplefig1} we see an example of sample graphics with a single plot, whereas in Figure \ref{fig:samplefig2} we see an example with two plots.}) 
-
-Formulas and equations without label:
-\begin{align*}
-	\hat{f_k} = \dfrac{\sum_{i=1}^{n-k} C_{i,k+1}} {\sum_{i=1}^{n-k} C_{i,k}}
-\end{align*}
-
-\begin{align*}
-	\hat{R_k} = C_{k,I+1-k} \left(  \hat{f}_{I+1-k} \cdots \hat{f}=_{I-1}-1\right)
-\end{align*}
-
-\begin{align}\label{eq:N}
-	\hat{\sigma}_k^2 = \dfrac{1}{I-n-1} \sum_{i=1}^{n-k} C_{i,k}\left( \dfrac{ C_{i,k+1}}{ C_{i,k}} -\hat{f_k} \right)^2
-\end{align}
-In \eqref{eq:N} we express $N_t$ in terms of $I_1,\dots,I_n$. The indicator variables are defined on page 16 in \cite{Wuthrich-Merz-13}.
-
+The reserve and standard error for ClaimType 2 in Table \ref{tab:mack2}
 \begin{table}[!ht]
 \center
 \begin{tabular}{rr}
@@ -160,22 +106,214 @@ IBNR: & 54,527,000 \\
 Mack S:E & 4,235,733\\
 \hline
 \end{tabular}
-\caption{Sample table. Use informative captions.} \label{tab:sampletab}
+\caption{ClaimType 2} \label{tab:mack2}
+\end{table}
+
+Descriptive analysis in Figures \ref{fig:dev} and \ref{fig:mack}.
+ \begin{figure}[h]
+ \center
+  \includegraphics[scale=.5]{devperiod.png}
+  \caption{Development periods}
+  \label{fig:dev}
+\end{figure}
+
+ \begin{figure}[H]
+ \center
+  \includegraphics[scale=.5]{plotmack.png}
+  \caption{Residual plots ClaimType 2}
+  \label{fig:mack}
+\end{figure}
+
+
+%% Claim type 1
+For ClaimType 1 the costs are sparse.
+\begin{table}[ht]
+\centering
+\resizebox{\textwidth}{!}{\begin{tabular}{rrrrrrrrr}
+  & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8  \\ 
+  \hline
+ 11&5943206& 3224539& 523777& 219658 &   NA& 29052& 21205&    NA\\
+ 12&6760918 &2874648 &912359& 127324& 87549&    NA&    NA &   NA\\
+ 13&5875200 &3165059 &713833& 265618& 58593&  9358& 15436& 22074\\
+ 14&6773477 &3069895 &755914 &187402 &68646&    NA&    NA&    NA\\
+ 15&8860401 &3326446 &796889 &292146& 31856&    NA&    NA&    NA\\
+ 16&8749801 &4044757& 991210& 140534 &88383 &   NA&    NA&    NA\\
+ 17&7188952 &3073177& 695189& 255516&    NA&    NA&    NA&    NA\\
+ 18&8547097 &4552700 &889427 &    NA&    NA&    NA &   NA&    NA\\
+ 19&5861715 &2460613   &  NA &    NA&    NA&    NA&    NA&    NA\\
+20& 6176258   &   NA &    NA &    NA&    NA &   NA&    NA&    NA\\
+   \hline
+\end{tabular}}
+\end{table}
+
+After some manipulation we can use ChainLadder as above to get full triangle.
+\begin{table}[ht]
+\centering
+\resizebox{\textwidth}{!}{\begin{tabular}{rrrrrrrrr}
+  & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8  \\ 
+  \hline
+11&5943206& 9167745& 9691522& 9911180&9911180&9940232&9961437&9983201\\
+12&6760918&9635566 &10547925& 10675249& 10762798& 10783479&10803207&10826811\\
+13&5875200&9040259&9754092 &10019710& 10078303& 10087661& 10103097& 10125171\\
+14&6773477&9843372& 10599286& 10786688& 10855334& 10876193& 10896091& 10919897\\
+15&8860401 &12186847& 12983736& 13275882& 13307738 &13333309 &13357702 &13386887\\
+16&8749801& 12794558& 13785768& 13926302& 14014685 &14041614 &14067303& 14098039\\
+17&7188952 &10262129 &10957318 &11212834& 11267599& 11289250& 11309903& 11334614\\
+18&8547097& 13099797 &13989224& 14255042& 14324665& 14352190& 14378447& 14409862\\
+19&5861715&8322328&8929702&9099381&9143823&9161393&9178154&9198207\\
+   20& 6176258&  9026318&  9685070&  9869102&  9917304&  9936360&  9954538 & 9976288\\
+   \hline
+\end{tabular}}
 \end{table}
 
 
+ \begin{figure}[H]
+ \center
+  \includegraphics[scale=.5]{plotmack1.png}
+  \caption{Residual plot ClaimType 1}
+  \label{fig:mack1}
+\end{figure}
 
-\subsection*{Summary}
-({\it Summarize your results and state your conclusions. })
 
 
+\begin{table}[!ht]
+\center
+\begin{tabular}{rr}
+	& Totals \\ 
+\hline
+IBNR: & 5,531,171 \\
+Mack S:E & 529,551\\
+\hline
+\end{tabular}
+\caption{ClaimType 1} \label{tab:mack1}
+\end{table}
 
 
+\subsection*{Ultimate claim iteration}
+
+We start with a full triangle from which we lower 10 years. Then we calculate 10 ultimate claims each one with one more year of information.
+In Figure \ref{fig:ultimate} we see how the estimates approaches 'true' ultimate cost.
+ \begin{figure}[H]
+ \center
+  \includegraphics[scale=.5]{uclaims.png}
+  \caption{Ultimate claims}
+  \label{fig:ultimate}
+\end{figure}
+
+
+%\begin{align}\label{eq:N}
+%	\hat{\sigma}_k^2 = \dfrac{1}{I-n-1} \sum_{i=1}^{n-k} C_{i,k}\left( \dfrac{ C_{i,k+1}}{ C_{i,k}} -\hat{f_k} \right)^2
+%\end{align}
+%In \eqref{eq:N} we express $N_t$ in terms of $I_1,\dots,I_n$. The indicator variables are defined on page 16 in \cite{Wuthrich-Merz-13}.
+%
+%\begin{table}[!ht]
+%\center
+%\begin{tabular}{rr}
+%	& Totals \\ 
+%\hline
+%IBNR: & 54,527,000 \\
+%Mack S:E & 4,235,733\\
+%\hline
+%\end{tabular}
+%\caption{Sample table. Use informative captions.} \label{tab:sampletab}
+%\end{table}
+
+\subsection*{Brasklapp}
+{\it Till denna inlämning är jag nödd och tvungen (2019-03-08 10:00). Fanns mer att analysera..
+
+\begin{thebibliography}{99}
+%\bibitem{Dupire-94}
+%B. Dupire (1994),
+%Pricing with a smile.
+%\emph{Risk}, 7, 18-20.
+%\bibitem{Wuthrich-Merz-13}
+%  Mario V. W\"{u}thrich and Michael Merz (2013),
+%  \emph{Financial Modeling, Actuarial Valuation and Solvency in Insurance},
+%  Springer-Verlag Berlin Heidelberg.
+\bibitem{CL}
+   https://CRAN.R-project.org/package=ChainLadder,
+  \emph{ChainLadder: Statistical Methods and Models for Claims Reserving in General Insurance}.
+\end{thebibliography}
 
 \section*{Appendix}
 
 \begin{verbatim}
+---RRproject2Mack1.R-----------------------------------------------------------
+## Risk och reserv Projekt 2
 
+#library(ChainLadder)
+
+claims <- read.table("Projekt2_Grupp8.txt", header = TRUE, sep = ";")
+summary(claims)
+head(claims, n=10)
+
+sub.1 <- subset(claims, is.element(ClaimType, 1),
+                select=c(ClaimDay, PaymentDay, ClaimCost))
+
+sub.1$ClaimYear <- sub.1$ClaimDay %/% 366
+sub.1$PaymentYear <- sub.1$PaymentDay %/% 366
+
+sub.1.yearly <-
+  aggregate(ClaimCost ~ ClaimYear + PaymentYear, data=sub.1, FUN=sum)
+sub.1.yearly$Development <-
+  sub.1.yearly$PaymentYear - sub.1.yearly$ClaimYear
+
+
+m1 <- max(sub.1.yearly$ClaimYear) + 1
+n1 <- max(sub.1.yearly$Development) + 1
+T.1 <- matrix(0,m1,n1)
+for (m in 1:m1)
+{
+  for (n in 1:n1)
+  {
+    c <- sub.1.yearly$ClaimCost[
+                      sub.1.yearly$ClaimYear == (m-1) &
+                      sub.1.yearly$Development == (n-1)]
+    if (length(c)>0)
+      T.1[m,n] <- c
+    else
+      T.1[m,n] <- NA
+  }
+}
+
+T.1[11:nrow(T.1),1:8]
+
+# Cumulative triangle
+C.1 <- matrix(NA,m1,n1)
+for (m in 1:m1-1)
+{
+  n.values <- which(!is.na(T.1[m,]))
+  n.max <- max(2,n.values)
+  C.1[m,1] <- T.1[m,1]
+  for (n in 2:n.max)
+  {
+    if (is.element(n,n.values))
+      C.1[m,n] <- C.1[m,n-1] + T.1[m,n]
+    else
+      C.1[m,n] <- C.1[m,n-1]
+  }
+}
+C.1[m1,1] <- T.1[m1,1]
+
+CC.1 <- C.1[11:nrow(C.1),1:8]
+
+triangle.1 <- as.triangle(CC.1)
+
+mack.1 <- MackChainLadder(triangle.1, est.sigma="Mack")
+mack.1
+mack.1$f
+mack.1$FullTriangle
+plot(mack.1)
+
+# Totals
+# Latest:   108,727,807.00
+# Dev:                0.95
+# Ultimate: 114,258,977.85
+# IBNR:       5,531,170.85
+# Mack.S.E      529,550.67
+# CV(IBNR):           0.10
+
+---RRproject2Mack2.R-----------------------------------------------------------
 ## Risk och reserv Projekt 2
 
 library(ChainLadder)
@@ -214,7 +352,9 @@ f <- sapply(1:(n-1),
 
 sigma.sq <- sapply(1:(n-1),
             function(i){
-              sum(T.2[c(1:(n-i)),i]*(T.2[c(1:(n-i)),i+1]/T.2[c(1:(n-i)),i] - f[i])^2)/(n-i-1)
+              sum(T.2[c(1:(n-i)),i]*(T.2[c(1:(n-i)),i+1]/
+                                       T.2[c(1:(n-i)),i] -
+                                       f[i])^2)/(n-i-1)
             }
 )
 
@@ -226,12 +366,28 @@ mack.2$FullTriangle
 plot(mack.2)
 
 
+
+# Check
+f
+#3.402217 1.521390 1.177938 1.083928 1.042521 1.020895 1.009772 1.005389 1.000891
+mack.2$f
+#3.402217 1.521390 1.177938 1.083928 1.042521 1.020895 1.009772 1.005389 1.000891 1.000000
+
+sqrt(sigma.sq)
+#816.946479 99.178128 129.949537 39.178689 50.198601 33.094542 3.973309 35.430556
+mack.2$sigma
+#816.946479 99.178128 129.949537 39.178689  50.198601 33.094542 3.973309 35.430556 3.973309
+
+
+# ITERATION
 #First 10 years
-s.22.yearly <- subset(sub.2.yearly, ClaimYear < 11 & Development < 10)
+s.22.yearly <- subset(sub.2.yearly, ClaimYear < 11 &
+                        Development < 10)
 T.22 <- incr2cum(as.triangle(s.22.yearly,
                                    origin="ClaimYear",
                                    dev="Development",
-                                   value="ClaimCost"), na.rm = FALSE)
+                                   value="ClaimCost"),
+                                   na.rm = FALSE)
 
 ultimate.claims <- rep(0, 9)
 U0 <- matrix(T.22,nrow=10,ncol=10)
@@ -251,6 +407,7 @@ for (i in 2:10)
 t <- 1:9
 plot(t,ultimate.claims)
 lines(t,rep(U0[10,10],9))
+
 \end{verbatim}
 
 

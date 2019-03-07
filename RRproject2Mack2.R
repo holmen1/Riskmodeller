@@ -36,7 +36,9 @@ f <- sapply(1:(n-1),
 
 sigma.sq <- sapply(1:(n-1),
             function(i){
-              sum(T.2[c(1:(n-i)),i]*(T.2[c(1:(n-i)),i+1]/T.2[c(1:(n-i)),i] - f[i])^2)/(n-i-1)
+              sum(T.2[c(1:(n-i)),i]*(T.2[c(1:(n-i)),i+1]/
+                                       T.2[c(1:(n-i)),i] -
+                                       f[i])^2)/(n-i-1)
             }
 )
 
@@ -48,12 +50,28 @@ mack.2$FullTriangle
 plot(mack.2)
 
 
+
+# Check
+f
+#3.402217 1.521390 1.177938 1.083928 1.042521 1.020895 1.009772 1.005389 1.000891
+mack.2$f
+#3.402217 1.521390 1.177938 1.083928 1.042521 1.020895 1.009772 1.005389 1.000891 1.000000
+
+sqrt(sigma.sq)
+#816.946479 99.178128 129.949537 39.178689 50.198601 33.094542 3.973309 35.430556
+mack.2$sigma
+#816.946479 99.178128 129.949537 39.178689  50.198601 33.094542 3.973309 35.430556 3.973309
+
+
+# ITERATION
 #First 10 years
-s.22.yearly <- subset(sub.2.yearly, ClaimYear < 11 & Development < 10)
+s.22.yearly <- subset(sub.2.yearly, ClaimYear < 11 &
+                        Development < 10)
 T.22 <- incr2cum(as.triangle(s.22.yearly,
                                    origin="ClaimYear",
                                    dev="Development",
-                                   value="ClaimCost"), na.rm = FALSE)
+                                   value="ClaimCost"),
+                                   na.rm = FALSE)
 
 ultimate.claims <- rep(0, 9)
 U0 <- matrix(T.22,nrow=10,ncol=10)
