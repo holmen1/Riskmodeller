@@ -11,7 +11,7 @@
 \DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
 
 \title{Report I - MT7027 Risk Models and Reserving in Non-Life Insurance}
-\author{Mats Holm nnnnnn-nnnn }
+\author{Mats Holm}
 \date{8 March, 2019}                                           % Activate to display a given date or no date
 
 \begin{document}
@@ -45,22 +45,16 @@ bootstraping method or with a Gaussian copula.
 %%% CLAIM ARRIVAL
 \subsection*{Claim arrival process}
 By labeling each ClaimDay between 1-365 and plot the histogram we see in Figure \ref{fig:samplefig1} that both ClaimTypes show a common decrease during 'summer'.
- \begin{figure}[H]
+ \begin{figure}[h]
  \center
   \includegraphics[scale=.5]{histyear.png}
   \caption{Summer slowdown}
   \label{fig:samplefig1}
 \end{figure}
 
-This requires an inhomogenuos process. In $N_t  \sim  \mathrm{Pois}(\mu(t))$, where  $\mu(t) = \lambda t$. We get from R $fitdistr$
+This requires an inhomogenuos process. In $N_t  \sim  \mathrm{Pois}(\mu(t))$, where  $\mu(t) = \lambda t$. We get our$\lambda$ from R $fitdistr$, see Figure \ref{tab:lambda}
 
-%\begin{align}\label{eq:N}
-%	N_t  \sim  \mathrm{Pois}(\mu(t))
-%\end{align}
-%In \eqref{eq:N} we chose $\mu(t) = \lambda t$. With $\lambda$ for different claim types and season. Found with the help of R $fitdistr$-function.
-
-
-\begin{table}[!ht]
+\begin{table}[h]
 \center
 \begin{tabular}{r|rr}
 Type & Winter & Summer \\ 
@@ -69,16 +63,14 @@ Type & Winter & Summer \\
 2 & $\lambda=$6.77 & $\lambda=$2.1\\
 \hline
 \end{tabular}
-\caption{Poisson intensity} \label{tab:sampletab}
+\caption{Poisson intensity} \label{tab:lambda}
 \end{table}
-
-
 
 
 %%% CLAIM COST
 \subsection*{Claim cost}
-First,  we see in Figure \ref{fig:samplefig2} that both ClaimTypes show no apparent seasonal variation.
- \begin{figure}[H]
+First,  we see in Figure \ref{fig:samplefig2} that neither ClaimType show any apparent seasonal variation.
+ \begin{figure}[h]
  \center
   \includegraphics[scale=.5]{meancost.png}
   \caption{Daily meancost}
@@ -99,8 +91,8 @@ ClaimType 2
 \end{align*}
 for all i.i.d. $Y_k$ in (\ref{eq:sum2}).
 
-With values in Table \ref{tab:cost}
-\begin{table}[!ht]
+
+\begin{table}[h]
 \center
 \begin{tabular}{|r|rr|}
 \hline
@@ -108,11 +100,11 @@ With values in Table \ref{tab:cost}
 2 Weibull & $\tau=$1.148278 ,& $c=$105523\\
 \hline
 \end{tabular}
-\caption{Sample table} \label{tab:cost}
+\caption{Parameter estimates} \label{tab:cost}
 \end{table}
 
-
-The result is shown in Figure \ref{fig:xxx} below. Not too good fit, which we will study with help of qq-plots below.
+With R $fitdistr$ we get the values shown in Table \ref{tab:cost}. A plot with the fitted distribution together with
+observed data is shown in Figure \ref{fig:xxx} below.
  \begin{figure}[H]
  \center
   \includegraphics[scale=.5]{histfit.png}
@@ -120,7 +112,7 @@ The result is shown in Figure \ref{fig:xxx} below. Not too good fit, which we wi
   \label{fig:xxx}
 \end{figure}
 
-With these estimated parameters we plot the ordered observations against the inverse distribution function  i.e
+Not a very good fit. Which we further investigate by plotting  the ordered observations against the inverse distribution function  i.e
 \begin{align*}
 	\bigg\{ \left( X_k, F_X^{-1}\left(\dfrac{k}{n+1}\right)\right),k=1,\dots,n \bigg\}
 \end{align*}
@@ -131,15 +123,14 @@ and
 
 The resulting QQ-plots in fig \ref{fig:qqplot} shows that this choice give a really bad fit of the right tails.
 
- \begin{figure}[H]
+ \begin{figure}[h]
  \center
   \includegraphics[scale=.5]{qqplot.png}
   \caption{QQ-plot}
   \label{fig:qqplot}
 \end{figure}
 
-Weibull is worst, but can easily be seen in the lognormal case. See Figure \ref{fig:fit}
-
+Weibull is worst, but also obvious in the lognormal case. See Figure \ref{fig:fit}
  \begin{figure}[H]
  \center
   \includegraphics[scale=.5]{lognormalhistfit.png}
@@ -149,10 +140,10 @@ Weibull is worst, but can easily be seen in the lognormal case. See Figure \ref{
 
 %%
 \subsection*{Total claim amount process}
-With these assumptions we can 
+With these assumptions we can then
  create random samples of a yearly cost by
 
-First $\hat{N} =  sum(rpois(lambdaw,winterdays)) +  sum(rpois(lambdas,summerdays))$
+putting $\hat{N} =  sum(rpois(lambdaw,winterdays)) +  sum(rpois(lambdas,summerdays))$
 which we use in
 \begin{align*} 
 	\hat{X} = \mathrm{rlnorm}(\hat{N}_1,\mu log,\sigma log) 
@@ -161,7 +152,6 @@ and
 \begin{align*} 
 	 \hat{Y} =\mathrm{ rweibull}(\hat{N}_2,\tau,c)
 \end{align*}
-
 
 Then we model total claim cost after one year by
 \begin{align} \label{eq:sum12}
@@ -175,7 +165,7 @@ and
 
 \subsection*{Dependence}
 Before creating cumulative distribution, we check dependence between historical data
- Figure \ref{fig:samplefig4} showing dependence.
+ Figure \ref{fig:samplefig4} and  \ref{fig:samplefig10y} showing dependence.
 
 
  \begin{figure}[H]
@@ -214,7 +204,7 @@ Plotting the monthly costs from data $S_1$ and $S_2$, we see dependence and seas
 
 
 Then from the fictive sample the result is shown in Figure \ref{fig:bs}
- \begin{figure}[H]
+ \begin{figure}[h]
  \center
   \includegraphics[height=8cm, width=10cm]{bs.png}
   \caption{Simulated cost}
@@ -224,7 +214,7 @@ Then from the fictive sample the result is shown in Figure \ref{fig:bs}
 %% Copula
 \subsubsection*{Copula}
 With the help of R 
-First create normal bivariate $Z_1,Z_2$.
+we create normal bivariate $Z_1,Z_2$.
 \begin{align} \label{eq:bi1}
 	 \begin{bmatrix} Z_1 \\ Z_2\end{bmatrix} \sim N\left(\begin{bmatrix} 0 \\ 0\end{bmatrix},\begin{bmatrix} 1&\rho \\ \rho&1\end{bmatrix}\right)
 \end{align}
@@ -234,13 +224,13 @@ We get
 \begin{align} \label{eq:bi3}
 	  \left(\tilde{S_1},\tilde{S_2}\right) = \left(\hat{F}_X^\leftharpoonup(\Phi(Z_1)),\hat{F}_Y^\leftharpoonup(\Phi(Z_2))\right) 
 \end{align}
-a Gaussian copula with correlation coefficient $ \rho$.
+a Gaussian copula with correlation coefficient $ \rho$, see Figure \ref{fig:copula}.
 
- \begin{figure}[H]
+ \begin{figure}[h]
  \center
   \includegraphics[scale=0.8]{pairs5.png}
-  \caption{Gaussian Copula}
-  \label{fig:samplefig5}
+  \caption{Gaussian copula}
+  \label{fig:copula}
 \end{figure}
 
 %\subsection*{XL covers}
@@ -255,7 +245,7 @@ We model the total cost $\tilde{S}$ by $N$ generated samples from the copula in 
 \end{align*}
 
 
-Then, with $\hat{F}_{12}^\leftharpoonup$ the empirical quantile function for $\tilde{S}$ we find the 10\%-quantile retention level
+Then, with $\hat{F}_{12}^\leftharpoonup$ the empirical quantile function for $\tilde{S}$ we find the 10 \%-quantile retention level
 \begin{align*} 
 	K = \hat{F}_{12}^\leftharpoonup(0.9) = 249,130,402.
 \end{align*}
@@ -267,11 +257,12 @@ The estimate of the amount  is calculated by
 and then finally, the price $\pi = 1.1R_{SL} = 18,507,884$.
 
 \subsection*{Brasklapp}
-{\it Till denna inlämning är jag nödd och tvungen. Prioriterade fler metoder framför kalibrering och inkonsekventa korrelationer t.ex.}.
+{\it Till denna inlämning är jag nödd och tvungen (2019-03-08 09:30). Prioriterade fler metoder framför kalibrering och inkonsekventa korrelationer t.ex.}.
 
 \section*{Appendix}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{verbatim}
+---RRproject1.R------------------------------------------------------
 ## Risk och reserv Projekt 1
 
 library(MASS)
@@ -301,10 +292,10 @@ claims.daily$MeanCost<-claims.daily$Cost/claims.daily$Arrivals
 par(mfrow=c(2,1))
 h1 <- claims.365$ClaimDay365[claims.365$ClaimType==1]
 b1 <- seq(min(h1), max(h1), length.out = 13)
-hist(h1, breaks=b1)
+hist(h1, breaks=b1,main="Arrivals ClaimType 1")
 h2 <- claims.365$ClaimDay365[claims.365$ClaimType==2]
 b2 <- seq(min(h2), max(h2), length.out = 13)
-hist(h2, breaks=b2)
+hist(h2, breaks=b2,main="Arrivals ClaimType 2")
 
 # From hist, less arrivals June-August
 # Label to days in 1 Y 1-365
@@ -344,18 +335,51 @@ plot(ecdf(claims.daily$MeanCost[claims.daily$ClaimType==2]))
 # Claims 1
 summary(claims.daily$MeanCost[claims.daily$ClaimType==1])
 x1<-claims.daily$MeanCost[claims.daily$ClaimType==1]
-hist(x1,freq=F)
+hist(x1,200,freq=F,main="lognormal")
 fit1<-fitdistr(x1,"lognormal")$estimate
 lines(dlnorm(0:max(x1),fit1[1],fit1[2]),lwd=3)
 
 # Claims 2
 summary(claims.daily$MeanCost[claims.daily$ClaimType==2])
 x2<-claims.daily$MeanCost[claims.daily$ClaimType==2]
-hist(x2,freq=F)
+hist(x2,100,freq=F)
 fit2<-fitdistr(x2,"weibull")$estimate
 #fit2<-fitdistr(x,"weibull",list(shape = 10000, scale = 10), lower = 50)$estimate
 lines(dweibull(min(x2):max(x2),fit2[1],fit2[2]),lwd=3)
 
+
+## Q-Q check
+n1 <- length(x1)
+x1.sorted <- sort(x1,dec=FALSE)
+plot(x1.sorted,qlnorm((1:n1)/(n1+1),fit1[1],fit1[2]),
+     xlim=c(min(x1),max(x1)*0.55), ylim=c(min(x1),max(x1)*0.3),
+     xlab="data",ylab="model",main="QQ lognormal")
+lines(x1.sorted,x1.sorted)
+
+n2 <- length(x2)
+x2.sorted <- sort(x2,dec=FALSE)#asp=1
+plot(x2.sorted,qweibull((1:n2)/(n2+1),fit2[1],fit2[2]),
+     xlim=c(0,max(x2)*0.55), ylim=c(0,max(x2)*0.3),
+     xlab="data",ylab="model",main="QQ weibull")
+lines(x2.sorted,x2.sorted)
+
+par(mfrow=c(1,2))
+plot(x1.sorted,qlnorm((1:n1)/(n1+1),fit1[1],fit1[2]),
+     xlim=c(min(x1),max(x1)*0.5), ylim=c(min(x1),max(x1)*0.5),
+     xlab="data",ylab="model",main="lognormal")
+lines(x1.sorted,x1.sorted)
+plot(x2.sorted,qweibull((1:n2)/(n2+1),fit2[1],fit2[2]),
+     xlim=c(0,max(x2)*0.5), ylim=c(0,max(x2)*0.5),
+     xlab="data",main="weibull")
+lines(x2.sorted,x2.sorted)
+
+
+# Claims 1 tail detail
+n1 <- length(x1)
+x1.sorted <- sort(x1,dec=TRUE)
+x1.tail <- x1.sorted[3000 < x1.sorted & x1.sorted < 100000]
+hist(x1,50,freq=F)
+lines(dlnorm(x1,fit1[1],fit1[2]),lwd=3)
 
 ### Compound
 months<-c(31,28,31,30,31,30,31,31,30,31,30,31)
@@ -390,8 +414,7 @@ cor(S[,1],S[,2])
 #save(claims.daily, fit1, fit2, lambda1s,lambda1w,lambda2s,lambda2w, file = "fitted.RData")
 #save(S, file = "S.RData")
 
--------------------------------------------------------------------------------
-
+---RRproject1bivariate.R------------------------------------------------------
 ## Risk och reserv Projekt 1
 library(psych)
 
@@ -465,8 +488,8 @@ S2<-quantile(S[,2],u[,2],type=4)
 z<-cbind(S1,S2)
 pairs.panels(z)
 
------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+---RRproject1bootstrap.R--------------------------------------------------------
 
 ## Risk och reserv Projekt 1
 
@@ -537,8 +560,7 @@ for (k in 1:n)
 rho.bs <- cor(BS[,1],BS[,2]) #= 0.8629129
 plot(BS[,1],BS[,2],main=paste("rho=",rho.bs))
 
----------------------------------------------------------------------------------------------
-
+---RRprojrct1covers.R------------------------------------------------------------------
 ## Risk och reserv Projekt 1
 
 #save(S1,S2, file = "C.RData")
@@ -562,12 +584,11 @@ plot(v,quantile(S1+S2,v))
 # SL-cover single
 summary(S1+S2)
 K <- quantile(S1+S2,0.9)
+# 249130402
 
 Rsl <- max(0,S1+S2-K)
 price <- 1.1*mean(Rsl)
-
-
-
+# 18507884
 
 
 \end{verbatim}
