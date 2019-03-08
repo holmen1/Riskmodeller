@@ -23,17 +23,17 @@ In this project we analyze claim
 arrival times and claim size distributions for two insurance products.
 The task is to model
 the distribution of the total claim cost for claim arrivals from today until one year from
-today. We have 10 years of data from two non-life branches. The goal is then to form two processes of the total claim amount,
+today. We have 10 years of data from two non-life branches. The goal is to form two processes of the total claim amount,
 
 \begin{align} \label{eq:sum1}
 	S_1 = \sum_{k=1}^{N_1}  X_k 
 \end{align}
 and
 \begin{align} \label{eq:sum2}
-	 S_2 = \sum_{k=1}^{N_2} Y_k,
+	 S_2 = \sum_{k=1}^{N_2} Y_k.
 \end{align}
 
-where $N_i$ will be modelled as non-homogenous Poisson processes, $X$ and $Y$ with something else. We will try to capture the dependence between
+The $N_i$s will be modelled as non-homogenous Poisson processes, $X$ and $Y$ with something else. We will capture the dependence between
 $S_1$ and $S_2$ by  either the
 bootstraping method or with a Gaussian copula.
 
@@ -44,7 +44,7 @@ bootstraping method or with a Gaussian copula.
 
 %%% CLAIM ARRIVAL
 \subsection*{Claim arrival process}
-By labeling each ClaimDay between 1-365 and plot the histogram we see in Figure \ref{fig:samplefig1} that both ClaimTypes show a common decrease during 'summer'.
+By labeling each ClaimDay between 1-365 and plot the histogram we see in Figure \ref{fig:samplefig1} that both ClaimTypes show a common decrease during summer.
  \begin{figure}[h]
  \center
   \includegraphics[scale=.5]{histyear.png}
@@ -52,7 +52,7 @@ By labeling each ClaimDay between 1-365 and plot the histogram we see in Figure 
   \label{fig:samplefig1}
 \end{figure}
 
-This requires an inhomogenuos process. In $N_t  \sim  \mathrm{Pois}(\mu(t))$, where  $\mu(t) = \lambda t$. We get our$\lambda$ from R $fitdistr$, see Figure \ref{tab:lambda}
+This requires an inhomogenuos process. In $N_t  \sim  \mathrm{Pois}(\mu(t))$, where  $\mu(t) = \lambda t$. We get our $\lambda$ from R $fitdistr$, see Table \ref{tab:lambda}.
 
 \begin{table}[h]
 \center
@@ -69,7 +69,7 @@ Type & Winter & Summer \\
 
 %%% CLAIM COST
 \subsection*{Claim cost}
-First,  we see in Figure \ref{fig:samplefig2} that neither ClaimType show any apparent seasonal variation.
+We observe in Figure \ref{fig:samplefig2} that neither ClaimType show any apparent seasonal variation.
  \begin{figure}[h]
  \center
   \includegraphics[scale=.5]{meancost.png}
@@ -103,7 +103,7 @@ for all i.i.d. $Y_k$ in (\ref{eq:sum2}).
 \caption{Parameter estimates} \label{tab:cost}
 \end{table}
 
-With R $fitdistr$ we get the values shown in Table \ref{tab:cost}. A plot with the fitted distribution together with
+With Rs maximum-likelihood fitting $fitdistr$ we get the values shown in Table \ref{tab:cost}. A plot with the fitted distribution together with
 observed data is shown in Figure \ref{fig:xxx} below.
  \begin{figure}[H]
  \center
@@ -112,7 +112,7 @@ observed data is shown in Figure \ref{fig:xxx} below.
   \label{fig:xxx}
 \end{figure}
 
-Not a very good fit. Which we further investigate by plotting  the ordered observations against the inverse distribution function  i.e
+Not a very good fit. Which we further investigate by plotting  the ordered observations against the quantile function  i.e.
 \begin{align*}
 	\bigg\{ \left( X_k, F_X^{-1}\left(\dfrac{k}{n+1}\right)\right),k=1,\dots,n \bigg\}
 \end{align*}
@@ -121,7 +121,7 @@ and
 	\bigg\{ \left( Y_k, F_Y^{-1}\left(\dfrac{k}{n+1}\right)\right),k=1,\dots,n \bigg\}.
 \end{align*}
 
-The resulting QQ-plots in fig \ref{fig:qqplot} shows that this choice give a really bad fit of the right tails.
+The resulting QQ-plots in fig \ref{fig:qqplot} shows that this choice give a really bad fit by underestimating the right tails.
 
  \begin{figure}[h]
  \center
@@ -150,7 +150,7 @@ which we use in
 \end{align*}
 and
 \begin{align*} 
-	 \hat{Y} =\mathrm{ rweibull}(\hat{N}_2,\tau,c)
+	 \hat{Y} =\mathrm{ rweibull}(\hat{N}_2,\tau,c).
 \end{align*}
 
 Then we model total claim cost after one year by
@@ -159,13 +159,13 @@ Then we model total claim cost after one year by
 \end{align}
 and
 \begin{align} \label{eq:sum22}
-	 \hat{S_2} = \sum_{k=1}^{\hat{N}_2} \hat{Y}_k
+	 \hat{S_2} = \sum_{k=1}^{\hat{N}_2} \hat{Y}_k.
 \end{align}
 
 
 \subsection*{Dependence}
-Before creating cumulative distribution, we check dependence between historical data
- Figure \ref{fig:samplefig4} and  \ref{fig:samplefig10y} showing dependence.
+In order to get an idea of the correlation, we check dependence between historical data,
+as seen in Figure \ref{fig:samplefig4} and  \ref{fig:samplefig10y}.
 
 
  \begin{figure}[H]
@@ -216,13 +216,13 @@ Then from the fictive sample the result is shown in Figure \ref{fig:bs}
 With the help of R 
 we create normal bivariate $Z_1,Z_2$.
 \begin{align} \label{eq:bi1}
-	 \begin{bmatrix} Z_1 \\ Z_2\end{bmatrix} \sim N\left(\begin{bmatrix} 0 \\ 0\end{bmatrix},\begin{bmatrix} 1&\rho \\ \rho&1\end{bmatrix}\right)
+	 \begin{bmatrix} Z_1 \\ Z_2\end{bmatrix} \sim N\left(\begin{bmatrix} 0 \\ 0\end{bmatrix},\begin{bmatrix} 1&\rho \\ \rho&1\end{bmatrix}\right).
 \end{align}
-then from   $\left(\Phi(Z_1),\Phi(Z_2)\right) \sim  U[0,1] \times U[0,1]$ .
-With $\hat{F}_1^\leftharpoonup$ and $\hat{F}_2^\leftharpoonup$ the empirical quantile functions for $\hat{S_1}$ and $\hat{S_2}$ respectively.
+Then, from $\left(\Phi(Z_1),\Phi(Z_2)\right) \sim  U[0,1] \times U[0,1]$ 
+together with $\hat{F}_1^\leftharpoonup$ and $\hat{F}_2^\leftharpoonup$ the empirical quantile functions for $\hat{S_1}$ and $\hat{S_2}$ respectively.
 We get
 \begin{align} \label{eq:bi3}
-	  \left(\tilde{S_1},\tilde{S_2}\right) = \left(\hat{F}_X^\leftharpoonup(\Phi(Z_1)),\hat{F}_Y^\leftharpoonup(\Phi(Z_2))\right) 
+	  \left(\tilde{S_1},\tilde{S_2}\right) = \left(\hat{F}_1^\leftharpoonup(\Phi(Z_1)),\hat{F}_2^\leftharpoonup(\Phi(Z_2))\right) 
 \end{align}
 a Gaussian copula with correlation coefficient $ \rho$, see Figure \ref{fig:copula}.
 
@@ -257,7 +257,9 @@ The estimate of the amount  is calculated by
 and then finally, the price $\pi = 1.1R_{SL} = 18,507,884$.
 
 \subsection*{Brasklapp}
-{\it Till denna inlämning är jag nödd och tvungen (2019-03-08 09:30). Prioriterade fler metoder framför kalibrering och inkonsekventa korrelationer t.ex.}.
+{\tiny
+\it{Till denna inlämning är jag nödd och tvungen (2019-03-08 09:30). Prioriterade fler metoder framför kalibrering och inkonsekventa korrelationer t.ex.}
+\par}
 
 \section*{Appendix}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
