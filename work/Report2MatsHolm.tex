@@ -17,8 +17,7 @@
 \maketitle
 \section*{Project II}
 \subsection*{Objectives}
-In this project we analyze claim
-arrival times and claim size distributions for two insurance products.
+In this project we analyze the reserving/prediction method Chain Ladder.
 \\
 
 
@@ -119,7 +118,7 @@ Descriptive analysis in Figures \ref{fig:dev} and \ref{fig:mack}.
 
  \begin{figure}[H]
  \center
-  \includegraphics[scale=.5]{plotmack.png}
+  \includegraphics[scale=.8]{plotmack.png}
   \caption{Residual plots ClaimType 2}
   \label{fig:mack}
 \end{figure}
@@ -129,7 +128,7 @@ Descriptive analysis in Figures \ref{fig:dev} and \ref{fig:mack}.
 For ClaimType 1 the costs are sparse.
 \begin{table}[ht]
 \centering
-\resizebox{\textwidth}{!}{\begin{tabular}{rrrrrrrrr}
+\begin{tabular}{rrrrrrrrr}
   & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8  \\ 
   \hline
  11&5943206& 3224539& 523777& 219658 &   NA& 29052& 21205&    NA\\
@@ -143,10 +142,10 @@ For ClaimType 1 the costs are sparse.
  19&5861715 &2460613   &  NA &    NA&    NA&    NA&    NA&    NA\\
 20& 6176258   &   NA &    NA &    NA&    NA &   NA&    NA&    NA\\
    \hline
-\end{tabular}}
+\end{tabular}
 \end{table}
 
-After some manipulation we can use ChainLadder as above to get full triangle.
+After some manipulation we use ChainLadder to get full triangle and the reserve in Table \ref{tab:mack1}.
 \begin{table}[ht]
 \centering
 \resizebox{\textwidth}{!}{\begin{tabular}{rrrrrrrrr}
@@ -166,16 +165,6 @@ After some manipulation we can use ChainLadder as above to get full triangle.
 \end{tabular}}
 \end{table}
 
-
- \begin{figure}[H]
- \center
-  \includegraphics[scale=.5]{plotmack1.png}
-  \caption{Residual plot ClaimType 1}
-  \label{fig:mack1}
-\end{figure}
-
-
-
 \begin{table}[!ht]
 \center
 \begin{tabular}{rr}
@@ -189,10 +178,18 @@ Mack S:E & 529,551\\
 \end{table}
 
 
+ \begin{figure}[H]
+ \center
+  \includegraphics[scale=.5]{plotmack1.png}
+  \caption{Residual plot ClaimType 1}
+  \label{fig:mack1}
+\end{figure}
+
+
 \subsection*{Ultimate claim iteration}
 
-We start with a full triangle from which we lower 10 years. Then we calculate 10 ultimate claims each one with one more year of information.
-In Figure \ref{fig:ultimate} we see how the estimates approaches 'true' ultimate cost.
+We start with a full triangle from which we remove 10 years. Then we calculate 10 ultimate claims each one with one more year of information.
+In Figure \ref{fig:ultimate} we see how the estimates approaches 'true' ultimate cost, marked by a straight line.
  \begin{figure}[H]
  \center
   \includegraphics[scale=.5]{uclaims.png}
@@ -201,35 +198,10 @@ In Figure \ref{fig:ultimate} we see how the estimates approaches 'true' ultimate
 \end{figure}
 
 
-%\begin{align}\label{eq:N}
-%	\hat{\sigma}_k^2 = \dfrac{1}{I-n-1} \sum_{i=1}^{n-k} C_{i,k}\left( \dfrac{ C_{i,k+1}}{ C_{i,k}} -\hat{f_k} \right)^2
-%\end{align}
-%In \eqref{eq:N} we express $N_t$ in terms of $I_1,\dots,I_n$. The indicator variables are defined on page 16 in \cite{Wuthrich-Merz-13}.
-%
-%\begin{table}[!ht]
-%\center
-%\begin{tabular}{rr}
-%	& Totals \\ 
-%\hline
-%IBNR: & 54,527,000 \\
-%Mack S:E & 4,235,733\\
-%\hline
-%\end{tabular}
-%\caption{Sample table. Use informative captions.} \label{tab:sampletab}
-%\end{table}
-
 \subsection*{Brasklapp}
-{\it Till denna inlämning är jag nödd och tvungen (2019-03-08 10:00). Fanns mer att analysera..
+...
 
 \begin{thebibliography}{99}
-%\bibitem{Dupire-94}
-%B. Dupire (1994),
-%Pricing with a smile.
-%\emph{Risk}, 7, 18-20.
-%\bibitem{Wuthrich-Merz-13}
-%  Mario V. W\"{u}thrich and Michael Merz (2013),
-%  \emph{Financial Modeling, Actuarial Valuation and Solvency in Insurance},
-%  Springer-Verlag Berlin Heidelberg.
 \bibitem{CL}
    https://CRAN.R-project.org/package=ChainLadder,
   \emph{ChainLadder: Statistical Methods and Models for Claims Reserving in General Insurance}.
