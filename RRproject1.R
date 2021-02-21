@@ -2,7 +2,7 @@
 
 library(MASS)
 
-claims <- read.table("Projekt1_Grupp8.txt", header = TRUE, sep = ";")
+claims <- read.table("data/Projekt1_Grupp8.txt", header = TRUE, sep = ";")
 summary(claims)
 head(claims, n=10)
 
@@ -62,7 +62,7 @@ par(mfrow=c(2,1))
 hist(claims.daily$MeanCost[claims.daily$ClaimType==1],100)
 hist(claims.daily$MeanCost[claims.daily$ClaimType==2],100)
 
-# Empirisk fördelningsfunktion
+# Empirisk fï¿½rdelningsfunktion
 par(mfrow=c(2,1))
 plot(ecdf(claims.daily$MeanCost[claims.daily$ClaimType==1]))
 plot(ecdf(claims.daily$MeanCost[claims.daily$ClaimType==2]))

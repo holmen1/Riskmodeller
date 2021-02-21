@@ -1,9 +1,9 @@
 ## Risk och reserv Projekt 1
 library(psych)
 
-claims <- read.table("Projekt1_Grupp8.txt", header = TRUE, sep = ";")
+claims <- read.table("data/Projekt1_Grupp8.txt", header = TRUE, sep = ";")
 
-# Olika värdedagar claim1 ? claim2 = inner join
+# Olika vï¿½rdedagar claim1 ? claim2 = inner join
 CommonDays<-intersect(claims$ClaimDay[claims$ClaimType==1],
                       claims$ClaimDay[claims$ClaimType==2])
 

@@ -2,7 +2,7 @@
 
 ### BOOTSTRAP
 
-claims <- read.table("Projekt1_Grupp8.txt", header = TRUE, sep = ";")
+claims <- read.table("data/Projekt1_Grupp8.txt", header = TRUE, sep = ";")
 
 claims.daily <- aggregate(list(ClaimCost=claims$ClaimCost),
                           list(ClaimDay=claims$ClaimDay,
